@@ -57,9 +57,12 @@ A phase does not start until the previous phase's gate passes.
 
 *Nothing user-facing. Get the ground right before a single page exists.*
 
-- [ ] **P0-01 — Initialise the git repository**
+- [x] **P0-01 — Initialise the git repository**
   Done when: `git init` run, `.gitignore` covers `node_modules`, `.next`, `.env*` (but not `.env.example`), conventional-commit convention noted in the repo, and the existing docs + planning files are in the first commit.
-  Note: this directory is currently **not** a git repo.
+  Done 2026-08-02 — branch `main`, root commit `8bd38a2`, conventions in `CLAUDE.md` §5.
+
+- [ ] **P0-01b — Push to a GitHub remote** ⛔ D11
+  Done when: a remote repository exists, `main` is pushed, and branch protection requires the CI checks from P0-11. Per `docs/TECHNICAL.md` §9 the repository should live in the **client's** account with the developer as a collaborator — if it starts under the developer's account, transfer is part of this task.
 
 - [ ] **P0-02 — Scaffold the Next.js app**
   Done when: Next.js App Router + TypeScript `strict: true` + Tailwind installed and booting. Versions checked with Context7 before installing, not from memory. `npm run dev`, `build`, `lint`, `typecheck` all defined and passing on an empty app.

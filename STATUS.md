@@ -9,10 +9,11 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | | |
 |---|---|
-| **Phase** | 0 — Foundation *(not started)* |
+| **Phase** | 0 — Foundation *(in progress)* |
 | **Current task** | none in progress |
-| **Next action** | **P0-01** — initialise the git repository, then **P0-02** — scaffold the Next.js app |
+| **Next action** | **P0-02** — scaffold the Next.js app (App Router, TypeScript strict, Tailwind). Check current versions with Context7 before installing. |
 | **Code written** | none — the repository contains documentation and planning only |
+| **Git** | local repo on branch `main`, root commit `8bd38a2`. **No remote yet** — see P0-01b / D11 |
 | **Deployed** | no |
 | **Blocked on** | nothing blocks Phase 0 except **P0-05 / D16** (dark or light canvas) and **P0-13 / D11** (account ownership). Everything else in Phase 0 can proceed today. |
 
@@ -20,7 +21,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 15 | 0 | ⬜ not started |
+| 0 — Foundation | 16 | 1 | 🟡 in progress |
 | 1 — Design system | 30 | 0 | ⬜ not started |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
@@ -57,6 +58,15 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-02 — P0-01 git repository
+
+- `git init -b main`, `.gitignore` written (Next.js / Node / Vercel / Playwright; `.env*` ignored, `.env.example` explicitly not).
+- Git conventions added to `CLAUDE.md` §5 — conventional commits, task ID referenced in the commit.
+- Root commit `8bd38a2`: 14 files, all documentation and planning. No code, no dependencies.
+- **P0-01 done.** Added **P0-01b** for the GitHub remote — `gh` is installed but not authenticated, and D11 says the repository should end up in the client's account.
+- **Verify:** `git log --stat` shows only docs and planning files; no `.env` was ever staged.
+- **Next:** P0-02 — scaffold the Next.js app.
 
 ### 2026-08-02 — Planning
 
