@@ -46,6 +46,7 @@ Every question that must be answered before the work that depends on it can star
 | **D16** | Dark or light canvas for v1? | P0-05, P0-06, and every visual task after it | A dark editorial canvas suits the photography-forward luxury positioning and makes images pop; warm white reads calmer and more Apple-like. `docs/DESIGN_SYSTEM.md` §9: pick **one** and execute it perfectly. Both token sets get defined either way. | 🔴 Open |
 | **D17** | Which real place is the free preview? | P2-05, P2-13 | It must be a genuinely strong entry — it is the single highest-leverage block in the product. The brief's "Luka Café" is a placeholder and must not ship. | 🔴 Open |
 | **D18** | Display and body typefaces, and licensing for any paid face | P0-07 | Must be validated **in Hebrew first**. Max two typefaces site-wide. Candidates in `docs/BRAND.md` §5. | 🔴 Open |
+| **D19** | Repository visibility — public or private? | P0-01c | Currently **public**. Recommendation: **private** until launch. The repo will hold the paywall implementation, access-check logic and the guide's content — all of it is the paid product. Nothing is leaked yet (docs only), so this is cheap to change now and expensive later. Public is defensible only if the client wants the build in the open and the content lives in a CMS rather than the repo. | 🔴 Open |
 
 ---
 

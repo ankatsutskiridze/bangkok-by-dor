@@ -13,7 +13,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | **Current task** | none in progress |
 | **Next action** | **P0-02** — scaffold the Next.js app (App Router, TypeScript strict, Tailwind). Check current versions with Context7 before installing. |
 | **Code written** | none — the repository contains documentation and planning only |
-| **Git** | local repo on branch `main`, root commit `8bd38a2`. **No remote yet** — see P0-01b / D11 |
+| **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **currently public**, see D19 · no branch protection yet (P0-01c) |
 | **Deployed** | no |
 | **Blocked on** | nothing blocks Phase 0 except **P0-05 / D16** (dark or light canvas) and **P0-13 / D11** (account ownership). Everything else in Phase 0 can proceed today. |
 
@@ -21,7 +21,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 16 | 1 | 🟡 in progress |
+| 0 — Foundation | 17 | 1 | 🟡 in progress |
 | 1 — Design system | 30 | 0 | ⬜ not started |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
@@ -31,8 +31,9 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 ## Decisions outstanding
 
-18 open, 0 answered. Full detail in `DECISIONS.md`.
+19 open, 0 answered. Full detail in `DECISIONS.md`.
 
+- **Needed now**: **D19 repository visibility** — the repo is public and will soon hold the paywall logic and the paid content
 - **Needed soon** (blocks work in the next two phases): D16 canvas · D18 typefaces · D6 category list · D17 free-preview place · D10 English at launch
 - **Needed before Phase 3**: D8 content source · D7 launch volume · D9 photo rights
 - **Needed before Phase 4**: D1 payment provider · D2 entity & VAT · D3 refund policy · D4 access method · D5 currency
@@ -58,6 +59,13 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-02 — P0-01b GitHub remote
+
+- Client created and pushed to `github.com/ankatsutskiridze/bangkok-by-dor`. `main` tracks `origin/main`, both commits present, working tree clean.
+- **P0-01b partial.** Repo exists and is pushed; three things remain: visibility (new decision **D19** — it is public and the recommendation is private until launch), branch protection (needs the CI from P0-11 → tracked as **P0-01c**), and transfer to the client's account (D11).
+- **Verify:** nothing sensitive is in the history — the two commits contain documentation only, no `.env`, no keys.
+- **Next:** P0-02 — scaffold the Next.js app.
 
 ### 2026-08-02 — P0-01 git repository
 

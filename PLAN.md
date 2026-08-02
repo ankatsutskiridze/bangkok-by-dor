@@ -61,8 +61,12 @@ A phase does not start until the previous phase's gate passes.
   Done when: `git init` run, `.gitignore` covers `node_modules`, `.next`, `.env*` (but not `.env.example`), conventional-commit convention noted in the repo, and the existing docs + planning files are in the first commit.
   Done 2026-08-02 — branch `main`, root commit `8bd38a2`, conventions in `CLAUDE.md` §5.
 
-- [ ] **P0-01b — Push to a GitHub remote** ⛔ D11
+- [~] **P0-01b — Push to a GitHub remote** ⛔ D11
   Done when: a remote repository exists, `main` is pushed, and branch protection requires the CI checks from P0-11. Per `docs/TECHNICAL.md` §9 the repository should live in the **client's** account with the developer as a collaborator — if it starts under the developer's account, transfer is part of this task.
+  2026-08-02 — repo created and pushed: `ankatsutskiridze/bangkok-by-dor`, `main` tracking `origin/main`. Still outstanding: **visibility is Public** (decide before any content or paywall code lands — see D19), branch protection waits on P0-11 CI, transfer to the client's account waits on D11.
+
+- [ ] **P0-01c — Repository visibility and branch protection** ⛔ D19, depends on P0-11
+  Done when: visibility is settled and recorded in `DECISIONS.md`, and `main` is protected — PRs required, CI checks (typecheck · lint · unit · Playwright) must pass before merge.
 
 - [ ] **P0-02 — Scaffold the Next.js app**
   Done when: Next.js App Router + TypeScript `strict: true` + Tailwind installed and booting. Versions checked with Context7 before installing, not from memory. `npm run dev`, `build`, `lint`, `typecheck` all defined and passing on an empty app.
