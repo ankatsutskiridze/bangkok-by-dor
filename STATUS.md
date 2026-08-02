@@ -13,7 +13,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | **Current task** | none in progress |
 | **Next action** | **P0-02** — scaffold the Next.js app (App Router, TypeScript strict, Tailwind). Check current versions with Context7 before installing. |
 | **Code written** | none — the repository contains documentation and planning only |
-| **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **currently public**, see D19 · no branch protection yet (P0-01c) |
+| **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
 | **Blocked on** | nothing blocks Phase 0 except **P0-05 / D16** (dark or light canvas) and **P0-13 / D11** (account ownership). Everything else in Phase 0 can proceed today. |
 
@@ -31,11 +31,10 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 ## Decisions outstanding
 
-19 open, 0 answered. Full detail in `DECISIONS.md`.
+18 open, 1 answered. Full detail in `DECISIONS.md`.
 
-- **Needed now**: **D19 repository visibility** — the repo is public and will soon hold the paywall logic and the paid content
 - **Needed soon** (blocks work in the next two phases): D16 canvas · D18 typefaces · D6 category list · D17 free-preview place · D10 English at launch
-- **Needed before Phase 3**: D8 content source · D7 launch volume · D9 photo rights
+- **Needed before Phase 3**: D8 content source *(narrowed by D19 — the repo is public, so paid content cannot live in it as MDX)* · D7 launch volume · D9 photo rights
 - **Needed before Phase 4**: D1 payment provider · D2 entity & VAT · D3 refund policy · D4 access method · D5 currency
 - **Needed before launch**: D11 accounts · D12 email capture · D13 analytics · D14 support channel · D15 v1+ roadmap
 
@@ -59,6 +58,13 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-02 — D19 answered, session closed
+
+- **D19 answered: the repository stays public.** Recorded in `DECISIONS.md` §5 with its consequences.
+- Two downstream constraints now apply and are written into the plan: D8/P3-01 can no longer put paid content in this repo as MDX, and secret scanning + push protection became mandatory (P0-01c).
+- No code written. Session ended by agreement — code work resumes next session.
+- **Next:** P0-02 — scaffold the Next.js app. Per `docs/RULES.md` §0, propose the plan and get approval before installing anything; check versions with Context7, not from memory.
 
 ### 2026-08-02 — P0-01b GitHub remote
 

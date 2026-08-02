@@ -63,10 +63,10 @@ A phase does not start until the previous phase's gate passes.
 
 - [~] **P0-01b — Push to a GitHub remote** ⛔ D11
   Done when: a remote repository exists, `main` is pushed, and branch protection requires the CI checks from P0-11. Per `docs/TECHNICAL.md` §9 the repository should live in the **client's** account with the developer as a collaborator — if it starts under the developer's account, transfer is part of this task.
-  2026-08-02 — repo created and pushed: `ankatsutskiridze/bangkok-by-dor`, `main` tracking `origin/main`. Still outstanding: **visibility is Public** (decide before any content or paywall code lands — see D19), branch protection waits on P0-11 CI, transfer to the client's account waits on D11.
+  2026-08-02 — repo created and pushed: `ankatsutskiridze/bangkok-by-dor`, `main` tracking `origin/main`. Visibility settled as **public** (D19). Still outstanding: branch protection waits on P0-11 CI, transfer to the client's account waits on D11.
 
-- [ ] **P0-01c — Repository visibility and branch protection** ⛔ D19, depends on P0-11
-  Done when: visibility is settled and recorded in `DECISIONS.md`, and `main` is protected — PRs required, CI checks (typecheck · lint · unit · Playwright) must pass before merge.
+- [ ] **P0-01c — Repository hardening** *(depends on P0-11 for the CI checks)*
+  Done when: **secret scanning and push protection are enabled** (mandatory — the repo is public per D19), and `main` is protected: PRs required, CI checks (typecheck · lint · unit · Playwright) must pass before merge.
 
 - [ ] **P0-02 — Scaffold the Next.js app**
   Done when: Next.js App Router + TypeScript `strict: true` + Tailwind installed and booting. Versions checked with Context7 before installing, not from memory. `npm run dev`, `build`, `lint`, `typecheck` all defined and passing on an empty app.
@@ -214,6 +214,7 @@ Every component: one per file, named export, file name matches the component, un
 
 - [ ] **P3-01 — Choose the content source** ⛔ D8
   CMS (Sanity / Payload) vs MDX in-repo. Recommendation on record: **a CMS** — the business model promises lifetime updates and Dor cannot depend on a developer to publish a café. MDX is acceptable only if the client accepts that every content change is a code deploy.
+  **Constraint from D19:** the repository is public. MDX-in-repo would publish the entire paid guide for free and make the paywall decorative. If MDX is still chosen, the content must live outside this repo (private submodule or a separate private repo) — settle that here, not later.
 
 - [ ] **P3-02 — Zod content schemas**
   `Recommendation`, `Guide`, `Category`, `Image`, exactly as specified in `docs/CONTENT.md` §1 and `BUSINESS_LOGIC.md` §6.2. Every field required except `bestTimeNote` and manual `related` overrides. `cons` has `.min(1)` — enforced in the schema, not by convention. `rating` 1–10 with one decimal. `bestFor` and `bestTimeToVisit` are closed enums.
