@@ -276,8 +276,11 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P2-19 — English copy** ⛔ D10 (does English ship at launch?)
   If English is not ready, `en` routes fall back gracefully with a clear notice — never empty fields.
 
-- [ ] **P2-20 — SEO for public pages**
+- [~] **P2-20 — SEO for public pages** *(the content-independent half, built ahead of its phase)*
   Full metadata, Open Graph, Twitter cards, canonical URLs, `hreflang` for he/en, Hebrew as default locale in metadata, one real `<h1>` per page with headings in order, `sitemap.xml` and `robots.txt` generated with auth/account routes excluded.
+  2026-08-03 — `app/robots.ts` and `app/sitemap.ts`. Both locales are cross-linked with `hreflang`, which is what stops Google treating the Hebrew and English pages as duplicates and picking one itself. Auth and account routes are excluded from both.
+  **Recommendation pages are deliberately *not* disallowed.** Their public shell is the sales pitch and is meant to be indexed (`docs/TECHNICAL.md` §7); the paid body is never in the HTML for a crawler to find. Disallowing them would hide the product from search to protect content that is not there.
+  **Why not `[x]`:** three parts remain. Recommendations, guides and categories join the sitemap once a content source exists (**D8**); Open Graph and Twitter cards need images and real copy (**D9**, P2-18); and the schema.org paywall markup is P4-15.
 
 - [ ] **P2-21 — Pre-purchase email capture** ⛔ D12
   Only if the client wants it, and only with explicit opt-in that satisfies Israeli anti-spam law (חוק הספאם).

@@ -23,7 +23,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 |---|---|---|---|
 | 0 — Foundation | 18 | 7 | 🟡 gate passed, 11 blocked |
 | 1 — Design system | 30 | 0 | 🟡 19 components + RTL harness, awaiting visual sign-off |
-| 2 — Public shell | 21 | 0 | ⬜ not started |
+| 2 — Public shell | 21 | 0 | 🟡 P2-20 robots/sitemap built ahead of phase |
 | 3 — Content layer | 15 | 1 | 🟡 P3-02/03/08 built ahead of phase |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
 | 5 — Polish | 9 | 0 | ⬜ not started |
@@ -58,6 +58,15 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — robots.txt and sitemap.xml
+
+- **P2-20 partial**, the half that does not wait on content. Both locales cross-linked with `hreflang`, which is what stops Google treating the Hebrew and English pages as duplicates and choosing one itself.
+- **Recommendation pages are deliberately not disallowed.** Their public shell is the sales pitch and is meant to be indexed; the paid body is never in the HTML for a crawler to find. Disallowing them would hide the product from search in order to protect content that is not there.
+- Auth and account routes are excluded from both files. That is housekeeping rather than protection — access is enforced server-side regardless — but it keeps a buyer from landing on someone else's login screen from a search result.
+- Three parts remain before this can be ticked: content routes need a source (**D8**), Open Graph and Twitter cards need images and real copy (**D9**, P2-18), and the schema.org paywall markup is P4-15.
+- Also confirmed: `origin` is up to date and CI is green on the two commits it has finished.
+- **Verify:** 99 unit tests, 92 E2E tests, all green.
 
 ### 2026-08-03 — Content fetching layer and related-recommendation logic
 
