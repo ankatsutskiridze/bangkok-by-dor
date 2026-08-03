@@ -22,7 +22,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | Phase | Tasks | Done | State |
 |---|---|---|---|
 | 0 — Foundation | 18 | 6 | 🟡 gate passed, 12 blocked |
-| 1 — Design system | 30 | 0 | 🟡 14 components + RTL harness, awaiting visual sign-off |
+| 1 — Design system | 30 | 0 | 🟡 16 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
@@ -58,6 +58,18 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — EmailForm and Gallery
+
+- **P1-27 `EmailForm`** and **P1-18 `Gallery`** built, both `[~]`. Sixteen components now stand. These two were chosen because they are behaviour-heavy and canvas-light — almost nothing in them changes when D16 is answered.
+- `Gallery` is built on a native `<dialog>` with `showModal()`. The top layer, the inert backdrop and the focus trap all come from the platform; hand-rolled focus traps are where accessibility bugs live. Focus returns to the thumbnail that opened it.
+- **The photo index lives in the query string**, which is what makes the back button close the lightbox rather than leave the page — on a phone, back is how people close things. A malformed index reads as "no photo" rather than an error, because query strings get mangled by chat apps.
+- Arrows and swipes mirror **by reading direction**, not by which way the key points: in Hebrew `ArrowLeft` advances. Read at the moment of interaction so the language toggle can flip direction without a remount.
+- `Gallery` needs a `<Suspense>` boundary at every call site or `useSearchParams` drops the route out of static rendering. Verified `/he` and `/en` still prerender.
+- `EmailForm` validates on submit, not per keystroke; errors are announced with `role="alert"`; the input stays `dir="ltr"` because an email address is never Hebrew. Zod does the validation, so the same definition is used again on the server at P4-04 rather than two that disagree.
+- **Three more of my own tests were wrong, and each taught something real.** Arrow-key tests pressed keys before hydration — the lightbox handlers genuinely do not exist until then, which is correct for a progressive enhancement. The focus-trap assertion forbade Chromium's normal one-step park on `<body>` as a modal's tab cycle wraps; forbidding it would have pushed towards a hand-rolled trap, which is worse. And a "wait for focus" helper matched the page's first button — a thumbnail behind the lightbox — instead of the dialog's.
+- Flat-colour placeholder images were generated for the gallery, clearly marked in their alt text. Not photographs, so not stock photography; real ones are P3-11, blocked on D9.
+- **Verify:** 62 unit tests, 77 E2E tests, all green.
 
 ### 2026-08-03 — Footer, LanguageToggle, FAQAccordion
 

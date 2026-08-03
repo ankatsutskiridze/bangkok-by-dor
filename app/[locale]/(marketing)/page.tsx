@@ -1,5 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Suspense } from "react";
 
+import { ScaffoldEmailForm } from "./ScaffoldEmailForm";
+import { Gallery } from "@/components/guide/Gallery";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Divider } from "@/components/ui/Divider";
@@ -19,6 +22,11 @@ type Props = {
   params: Promise<{ locale: Locale }>;
 };
 
+// A 1×1 transparent GIF. Real images ship with a real blur-up (P5-02); this
+// only exists so `Image`'s required `blurDataURL` is satisfied by the scaffold.
+const BLUR =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 /**
  * Scaffold page. It exists so the foundation is exercised in a real browser
  * rather than asserted in the abstract — i18n, RTL, the tokens and now the
@@ -37,6 +45,8 @@ export default async function HomePage({ params }: Props) {
   const tLang = await getTranslations("Language");
   const tFooter = await getTranslations("Footer");
   const tFaq = await getTranslations("FAQ");
+  const tGallery = await getTranslations("Gallery");
+  const tEmail = await getTranslations("Email");
 
   return (
     <main>
@@ -109,6 +119,37 @@ export default async function HomePage({ params }: Props) {
             consHeading={tProsCons("cons")}
             pros={["The view is genuinely the best in the city", "Staff speak English"]}
             cons={["It is not cheap", "Always full on weekends"]}
+          />
+
+          {/*
+            `Gallery` reads the query string, so Next.js requires a Suspense
+            boundary or the whole route drops out of static rendering. The
+            images are flat-colour placeholders generated at P1-18, clearly
+            marked as such — real photographs are P3-11, blocked on D9.
+          */}
+          <Suspense fallback={null}>
+            <Gallery
+              className="mt-12"
+              label={tGallery("label")}
+              lightboxLabel={tGallery("lightboxLabel")}
+              closeLabel={tGallery("close")}
+              previousLabel={tGallery("previous")}
+              nextLabel={tGallery("next")}
+              images={[1, 2, 3].map((n) => ({
+                src: `/scaffold/placeholder-${n}.png`,
+                alt: tGallery("placeholderAlt", { n }),
+                blurDataURL: BLUR,
+              }))}
+            />
+          </Suspense>
+
+          <ScaffoldEmailForm
+            className="mt-12"
+            label={tEmail("label")}
+            submitLabel={tEmail("submit")}
+            hint={tEmail("hint")}
+            invalidMessage={tEmail("invalid")}
+            errorMessage={tEmail("error")}
           />
 
           <FAQAccordion

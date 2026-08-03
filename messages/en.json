@@ -36,6 +36,21 @@
     "privacy": "Privacy",
     "refund": "Refunds"
   },
+  "Gallery": {
+    "label": "Photos",
+    "lightboxLabel": "Photo viewer",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next",
+    "placeholderAlt": "Placeholder image {n} — real photographs are added in P3-11"
+  },
+  "Email": {
+    "label": "Your email",
+    "submit": "Continue",
+    "hint": "I use it only to send your access link.",
+    "invalid": "That does not look like an email address.",
+    "error": "Something went wrong on my side. Try again in a moment, or write to me directly."
+  },
   "FAQ": {
     "firstTimeQuestion": "Is this suitable for first-time visitors?",
     "firstTimeAnswer": "Placeholder answer. Real copy is written in P2-10.",

@@ -187,7 +187,12 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P1-15 — `RecommendationCard`** — desktop-only image scale 1.0 → 1.03 on hover. Never rely on hover to reveal information.
 - [ ] **P1-16 — `LockedCard`** — hero image, name, category, rating, price level visible; then a clean lock panel with price and CTA. **Never a blurred fake body.** Styled as a sales surface, not an error.
 - [ ] **P1-17 — `HeroMedia`** — full-bleed on mobile.
-- [ ] **P1-18 — `Gallery`** — tap to open lightbox; swipe on mobile, arrow keys + Escape on desktop, focus trapped, gallery index in the URL.
+- [~] **P1-18 — `Gallery`** — tap to open lightbox; swipe on mobile, arrow keys + Escape on desktop, focus trapped, gallery index in the URL.
+  2026-08-03. Built on a native `<dialog>` with `showModal()` — the top layer, the inert backdrop and the focus trap all come from the platform, and hand-rolled focus traps are where accessibility bugs live. Focus returns to the thumbnail that opened it, so a keyboard reader resumes where they were rather than at the top of the document.
+  **The index lives in the query string**, which is what makes back close the lightbox instead of leaving the page — on a phone, back is how people close things. An out-of-range or malformed index reads as "no photo" rather than an error; query strings get mangled by chat apps.
+  Arrows and swipes **mirror by reading direction**, not by which way the key points: in Hebrew `ArrowLeft` advances. Read at the moment of interaction, so the language toggle can flip direction without a remount.
+  **⚠ Requires a `<Suspense>` boundary** at every call site — `useSearchParams` otherwise drops the whole route out of static rendering. Verified the boundary keeps `/he` and `/en` statically generated.
+  Images are flat-colour placeholders generated for this task, clearly marked in their alt text. Not photographs, so not stock photography — real ones are P3-11, blocked on **D9**.
 - [~] **P1-19 — `ProsConsList`** — cons get the **same visual weight** as pros. Cons use the muted caution earth tone (#8A5A2B), never red.
   2026-08-03. Two equal columns, identical heading treatment on both — asserted by a test that compares the two headings' classes, so a later change that quietly shrinks the cons side fails CI rather than shipping.
   **Throws on an empty `cons` array rather than degrading.** `docs/RULES.md` §1 says a place with no downsides does not get published; a component that silently rendered a pros-only list would turn a recommendation into an advertisement, which is the one thing this product cannot survive. The schema will also enforce `.min(1)` at P3-02 — belt and braces, deliberately.
@@ -209,7 +214,10 @@ Every component: one per file, named export, file name matches the component, un
   Written as an **async Server Component**, so the framework itself prevents it being moved to the browser — an async component cannot be a client component. That is enforcement, not a comment someone can ignore.
   `lib/auth/access.ts` denies everything until P4-09, and that is the correct stub: one that granted access would make every gate look like it works while protecting nothing.
   **Verified the way `docs/RULES.md` §2 prescribes** — `e2e/paywall.spec.ts` reads the raw response body, plus every text/JSON/JS response the page loads, and asserts the gated string is absent. **The tests were mutation-checked:** forcing `hasAccess` to return `true` made 4 of them fail, so they genuinely catch a leak rather than passing by construction.
-- [ ] **P1-27 — `EmailForm`** — real `<label>`, errors linked with `aria-describedby`, loading and error states, copy in Dor's voice.
+- [~] **P1-27 — `EmailForm`** — real `<label>`, errors linked with `aria-describedby`, loading and error states, copy in Dor's voice.
+  2026-08-03. A real visible `<label>` — a placeholder disappears the moment someone starts typing, which is when they most need it. Validation runs on submit rather than on every keystroke; telling someone their address is invalid at the third character is noise. Errors use `role="alert"` so a reader who has already moved past the field still learns the submit failed, and the input keeps `dir="ltr"` regardless of interface language because an email address is never Hebrew.
+  Validation is Zod, already a dependency, so the same definition of a valid address is used here and again on the server at P4-04 — not two that disagree at the edges. The value is trimmed: pasted addresses arrive with a trailing space more often than not, and the email is the account key.
+  All copy is passed in. The wording still needs Dor's voice at **P5-08**.
 
 ### Cross-cutting
 
