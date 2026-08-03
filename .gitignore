@@ -25,6 +25,7 @@ playwright-report/
 blob-report/
 .playwright/
 .nyc_output/
+.lighthouseci/
 
 # vercel
 .vercel/

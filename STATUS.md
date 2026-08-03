@@ -10,9 +10,9 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | | |
 |---|---|
 | **Phase** | 0 — Foundation *(in progress)* |
-| **Current task** | P0-02 partial — app scaffolded and running; only the Context7 version re-check remains |
-| **Next action** | **P0-03** — create the folder structure from `docs/TECHNICAL.md` §2. Approve Context7 on the next restart and close out P0-02 while you are there. |
-| **Code written** | scaffold only — `app/layout.tsx`, `app/page.tsx`, `app/globals.css` and the four config files. No product code. |
+| **Current task** | none in progress |
+| **Next action** | **P0-10** — security headers in `next.config.ts` (CSP, `X-Content-Type-Options`, `Referrer-Policy`, HSTS). Unblocked. While restarting, approve Context7 and close out P0-02. |
+| **Code written** | foundation only — i18n/RTL routing, env validation, the `LtrText` utility, unit + E2E smoke tests, CI workflow. No product UI. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
 | **Blocked on** | **P0-12 and P0-16 are blocked on the client** creating the Vercel and Neon accounts (D11 answered: they go in the client's name; the request has been sent). **P0-05 / D16** still blocks the visual tasks. P0-03, P0-04, P0-10 and P0-11 are all unblocked and can proceed now. |
@@ -21,7 +21,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 17 | 1 | 🟡 in progress |
+| 0 — Foundation | 18 | 4 | 🟡 in progress |
 | 1 — Design system | 30 | 0 | ⬜ not started |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
@@ -58,6 +58,17 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — P0-03, P0-04, P0-08, P0-11 — the foundation stands
+
+- **P0-03 done.** Tree from `docs/TECHNICAL.md` §2 created; `globals.css` moved into `styles/`. Three leaf folders deliberately *not* created — `webhooks/stripe` (D1), `auth/[...nextauth]` (D4), `/content` (D8) — because creating them would answer an open decision by implication.
+- **P0-04 done.** Zod 4 env schema in `lib/env.ts`, imported from `next.config.ts`. Verified by deleting `.env`: the build stops and names the missing variable. Only the two variables that exist today are declared.
+- **P0-08 done.** `next-intl@4.13.4`. `/he` and `/en` both statically generate with correct `lang` and `dir`; `/xx` 404s. Locale negotiation lives in **`proxy.ts`** — Next 16 renamed `middleware`. `LtrText` built per `docs/DESIGN_SYSTEM.md` §82.
+- **P0-11 partial.** Vitest (5 tests) and Playwright (10 passing) green; CI workflow written with three jobs. Left `[~]` because "blocks merge on failure" is branch protection, which is P0-01c.
+- **⚠ A real bug, caught by the tests:** `/` was redirecting to `/en`. next-intl detects `Accept-Language` by default, so Hebrew was the "default locale" in name only. Fixed with `localeDetection: false` and recorded as **D22** — worth re-reading once D10 is answered.
+- Two dependencies were installed and then removed as unnecessary: `vite-tsconfig-paths` (Vite does this natively) and `@testing-library/jest-dom` (never added — plain DOM assertions suffice).
+- **Verify:** `typecheck`, `lint`, `test`, `test:e2e` and `build` all pass locally. CI has never actually run — the first push will be its first execution, and workflow files usually need one round of fixing.
+- **Next:** P0-10 (security headers). P0-12 and P0-16 still wait on the client.
 
 ### 2026-08-03 — P0-02, the app is scaffolded and runs
 

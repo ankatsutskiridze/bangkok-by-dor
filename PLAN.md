@@ -73,11 +73,14 @@ A phase does not start until the previous phase's gate passes.
   2026-08-03 — Next 16.2.12 · React 19.2.4 · Tailwind 4.3.3 · TypeScript ^5 · ESLint ^9. App Router, `strict: true`, no `src/` dir, `@/*` alias, `--empty` template (no demo boilerplate). All four scripts defined and green; `dev` serves 200 at `localhost:3000` and `build` prerenders `/` and `/_not-found`.
   **Why not `[x]`:** versions were confirmed against the live npm registry, not Context7 — Context7 was still pending approval (P0-14). The intent of the requirement is met and arguably exceeded for version numbers, but the letter of the *Done when* is not. Re-confirm with Context7 next session and tick.
 
-- [ ] **P0-03 — Create the folder structure**
+- [x] **P0-03 — Create the folder structure**
   Done when: the tree in `docs/TECHNICAL.md` §2 exists (`/app/[locale]` route groups, `/components/{ui,guide,marketing}`, `/lib/{auth,payments,content,i18n,utils}`, `/messages`, `/styles`, `/types`). Empty folders are fine; no speculative example files.
+  Done 2026-08-03. `app/globals.css` moved to `styles/globals.css` to match the spec tree. Three deliberate omissions, each because creating the folder would quietly answer an open decision: `/api/webhooks/**stripe**` (D1 — provider not chosen), `/api/auth/**[...nextauth]**` (D4 — magic-link not approved), and `/content` (D8 — CMS vs MDX). The parent folders exist; the presumptuous leaf does not.
 
-- [ ] **P0-04 — Environment variable validation**
+- [x] **P0-04 — Environment variable validation**
   Done when: `lib/env.ts` parses every env var through a Zod schema at startup, the app refuses to boot on a missing var, and `.env.example` is committed with every key (no values).
+  Done 2026-08-03. Zod 4 schema in `lib/env.ts`, imported from `next.config.ts` so a missing variable fails the **build**, not a request — verified by deleting `.env` and watching the build stop with `✖ Invalid input … → at NEXT_PUBLIC_SITE_URL`. Only `NODE_ENV` and `NEXT_PUBLIC_SITE_URL` are declared: a schema listing variables the app does not yet use would be a schema that lies. `.env.example` names the rest under "Not yet in use" with the task that will add each.
+  **For P0-16 / P4-01:** when the first server-only secret arrives, split this into a server schema and a `NEXT_PUBLIC_` client schema — `process.env` is stripped to the public prefix inside client bundles, so one shared schema breaks there.
 
 - [ ] **P0-05 — Choose the canvas: dark or light** ⛔ D16
   Done when: one canvas is chosen and recorded in `DECISIONS.md`. `docs/DESIGN_SYSTEM.md` §9 says pick one and execute it perfectly — do not build a theme switcher in v1.
@@ -89,8 +92,11 @@ A phase does not start until the previous phase's gate passes.
   Done when: max two typefaces chosen, **validated in Hebrew first**, self-hosted, subset to Hebrew + Latin, `font-display: swap`, preloaded. Tabular figures enabled for ratings/prices/times. The Hebrew adjustment from `docs/DESIGN_SYSTEM.md` §1 is implemented (≈1px larger body, tracking 0 on Hebrew headings).
   Blocked-ish: candidates are listed in `docs/BRAND.md` §5; licensing for any paid display face needs client sign-off.
 
-- [ ] **P0-08 — i18n and RTL foundation**
+- [x] **P0-08 — i18n and RTL foundation**
   Done when: `next-intl` (or the approved equivalent) is wired, `he` is the default locale, `[locale]` routing works, `<html lang>` and `dir` are set from the active locale, `messages/he.json` and `messages/en.json` exist, and a `dir="ltr"` inline wrapper utility exists for numbers, prices, THB amounts and Latin place names inside Hebrew text.
+  Done 2026-08-03 — `next-intl@4.13.4`. Config in `lib/i18n/{routing,navigation,request}.ts`; locale negotiation in **`proxy.ts`** (Next 16 renamed the `middleware` convention to `proxy`). `app/[locale]/layout.tsx` is the root layout and sets `lang` and `dir` from `getDirection(locale)`. `/he` and `/en` both statically generate; an unknown locale 404s instead of falling back silently. `LtrText` lives at `components/ui/LtrText.tsx` and uses `<span dir="ltr">` exactly as `docs/DESIGN_SYSTEM.md` §82 specifies.
+  **A real bug the E2E caught:** `/` was redirecting to `/en`, because next-intl detects `Accept-Language` by default — so "Hebrew is the default locale" was false for any English browser. Fixed with `localeDetection: false` (**D22**).
+  Message files hold placeholder scaffold copy only. Real Hebrew copy is P2-18, English is P2-19.
 
 - [ ] **P0-09 — Root layout and document shell**
   Done when: root layout sets lang/dir, default metadata, a skip-to-content link, semantic `<main>`, and the global reset. No visual chrome yet.
@@ -98,8 +104,11 @@ A phase does not start until the previous phase's gate passes.
 - [ ] **P0-10 — Security headers**
   Done when: CSP, `X-Content-Type-Options`, `Referrer-Policy` and HSTS are configured in `next.config`, and the app still loads with no CSP violations in the console.
 
-- [ ] **P0-11 — Testing and CI**
+- [~] **P0-11 — Testing and CI**
   Done when: Vitest and Playwright are installed and each has one passing smoke test; a CI workflow runs typecheck → lint → unit → Playwright on every PR and blocks merge on failure. Lighthouse CI budget added (thresholds enforced from P5-04, wired up now).
+  2026-08-03 — Vitest 4.1.10 (5 unit tests, green) and Playwright 1.62.1 (10 passing, 2 correctly skipped). Playwright runs against a **production build**, not `next dev`, and at a real **375px** viewport rather than a rounded device preset. `.github/workflows/ci.yml` runs typecheck → lint → unit in one job and Playwright in another; Lighthouse is a third, `continue-on-error` job against `lighthouserc.json`, whose assertions are all `warn` until P5-04 flips them to `error`.
+  `vite-tsconfig-paths` was installed and then removed — Vite resolves tsconfig paths natively via `resolve.tsconfigPaths`. `@testing-library/jest-dom` was deliberately not added; plain DOM assertions cover these tests.
+  **Why not `[x]`:** "blocks merge on failure" is branch protection, which is **P0-01c** and needs the repo settings. The workflow exists and will run, but nothing is enforced until then.
 
 - [ ] **P0-12 — Vercel project and environments**
   Done when: the project is deployed on Vercel, `main` → production and PRs → preview, with separate env var sets for development / preview / production. Payment keys in preview are test-mode keys.
