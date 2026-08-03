@@ -9,13 +9,13 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | | |
 |---|---|
-| **Phase** | 0 gate passed · 1 — Design system *(in progress)* |
+| **Phase** | 0 gate passed · 1 in progress · slices of 2, 3 and 4 built ahead, by agreement |
 | **Current task** | none in progress |
-| **Next action** | **P0-01c is now unblocked and is yours** — CI has run, so the check names exist: enable secret scanning + push protection, and protect `main`. Then the project waits on **D16**, **D24**, **D18**, **D25** and the client's accounts. On the next restart, approve Context7 and close out P0-02. |
-| **Code written** | foundation only — i18n/RTL routing, env validation, the `LtrText` utility, unit + E2E smoke tests, CI workflow. No product UI. |
+| **Next action** | **Nothing is left that does not wait on an answer.** Phase 0–4 were re-read task by task on 2026-08-03 and every remaining item is gated on a decision, on content, or on an account. Two things are *yours* rather than mine: **P0-01c** (secret scanning, push protection, branch protection — CI has run, so the check names exist) and approving Context7 on the next restart, which closes out P0-02. |
+| **Code written** | foundation, 19 components, the content schemas and fetching seam, the related-recommendations logic, robots/sitemap, and the access + webhook rules. No product UI — every page is still the scaffold. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
-| **Deployed** | no |
-| **Blocked on** | **P0-12 and P0-16 are blocked on the client** creating the Vercel and Neon accounts (D11 answered: they go in the client's name; the request has been sent). **P0-05 / D16** still blocks the visual tasks. P0-03, P0-04, P0-10 and P0-11 are all unblocked and can proceed now. |
+| **Deployed** | no — waiting on the client's Vercel account |
+| **Blocked on** | **The client, on every front.** Visual work: **D16** canvas, **D24** palette contrast, **D18** typefaces, **D25** icon set. Content: **D8** source, **D9** photos, **D6**, **D7**, **D17**. Payments: **D1**–**D5**. Infrastructure: the Vercel and Neon accounts (P0-12, P0-16). D16 unblocks the most by far. |
 
 ## Progress by phase
 
