@@ -11,7 +11,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 |---|---|
 | **Phase** | 0 — Foundation *(in progress)* |
 | **Current task** | none in progress |
-| **Next action** | **P0-10** — security headers in `next.config.ts` (CSP, `X-Content-Type-Options`, `Referrer-Policy`, HSTS). Unblocked. While restarting, approve Context7 and close out P0-02. |
+| **Next action** | Nothing in Phase 0 is both unblocked and unstarted. **Push and watch CI run for the first time**, then wait: **P0-05 / D16** gates every visual task, **P0-12 / P0-16** wait on the client's accounts. On the next restart, approve Context7 and close out P0-02. |
 | **Code written** | foundation only — i18n/RTL routing, env validation, the `LtrText` utility, unit + E2E smoke tests, CI workflow. No product UI. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
@@ -21,7 +21,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 18 | 4 | 🟡 in progress |
+| 0 — Foundation | 18 | 5 | 🟡 in progress |
 | 1 — Design system | 30 | 0 | ⬜ not started |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
@@ -58,6 +58,13 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — P0-10 security headers
+
+- **P0-10 done.** CSP, `X-Content-Type-Options`, `Referrer-Policy`, HSTS (production only), `X-Frame-Options: DENY` and a `Permissions-Policy` denying camera, microphone and geolocation. Asserted by `e2e/security-headers.spec.ts` against a production build — 18 E2E tests now, all green, both locales loading with an empty console.
+- **D23 recorded, and it is a real trade-off, not a formality.** `script-src` keeps `'unsafe-inline'`. A nonce-based CSP is only possible under dynamic rendering in Next.js, so making it strict would disable static generation, ISR and CDN caching across the whole site — against `docs/TECHNICAL.md` §3 and the LCP budget in §6. What `'unsafe-inline'` exposes is injected inline script, and nothing here renders user-submitted HTML. **Revisit at P4-16**, where the authenticated routes are dynamic anyway.
+- **Where Phase 0 stands:** everything unblocked is now done. What remains is gated — P0-05 on D16, P0-12/P0-16 on the client, P0-01c on branch protection, P0-13 on the account handover, P0-07 on D18, P0-15 on the sharp advisory.
+- **Next:** push, and watch CI execute for the first time.
 
 ### 2026-08-03 — P0-03, P0-04, P0-08, P0-11 — the foundation stands
 

@@ -101,8 +101,10 @@ A phase does not start until the previous phase's gate passes.
 - [ ] **P0-09 — Root layout and document shell**
   Done when: root layout sets lang/dir, default metadata, a skip-to-content link, semantic `<main>`, and the global reset. No visual chrome yet.
 
-- [ ] **P0-10 — Security headers**
+- [x] **P0-10 — Security headers**
   Done when: CSP, `X-Content-Type-Options`, `Referrer-Policy` and HSTS are configured in `next.config`, and the app still loads with no CSP violations in the console.
+  Done 2026-08-03. All four plus `X-Frame-Options: DENY` and a `Permissions-Policy` denying camera, microphone and geolocation. HSTS is production-only — no reason to teach a developer's browser that localhost is HTTPS-only. Asserted by `e2e/security-headers.spec.ts` against a **production** build, including a test that `'unsafe-eval'` never ships and that both locales load with an empty console.
+  **`script-src` carries `'unsafe-inline'` (D23).** The strict alternative is a per-request nonce, which Next.js can only apply during dynamic rendering — it would disable static generation, ISR and CDN caching site-wide. Revisit at **P4-16**: the authenticated routes are dynamic anyway and can carry a nonce policy at no cost.
 
 - [~] **P0-11 — Testing and CI**
   Done when: Vitest and Playwright are installed and each has one passing smoke test; a CI workflow runs typecheck → lint → unit → Playwright on every PR and blocks merge on failure. Lighthouse CI budget added (thresholds enforced from P5-04, wired up now).
