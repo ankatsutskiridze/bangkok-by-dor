@@ -367,8 +367,11 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P4-04 — Checkout flow**
   `/unlock` → email required → provider session created with `metadata.email`. Emotional frame: access to an insider guide, not the purchase of a website. **Never store raw card data.**
 
-- [ ] **P4-05 — Payment webhook**
+- [~] **P4-05 — Payment webhook** *(the idempotency rule built ahead of its phase)*
   Signature verified (mandatory), **idempotent by `providerPaymentId`** (providers retry), creates/updates `purchase`, upserts `user`. Rate-limited.
+  2026-08-03 — `applyPaymentEvent` in `lib/payments/purchase.ts`, pure and tested. Idempotent by `providerPaymentId`, so a retry cannot create a second row — which matters because a single refund would then cancel only one of them and the buyer would keep access they no longer paid for.
+  **`paid` can never overwrite `refunded`.** Providers do not guarantee delivery order, so a retried authorisation webhook can land after the refund; without that guard it would silently hand access back to someone who already has their money. A refund for a payment never recorded is stored as refunded rather than dropped — it grants nothing and leaves a trace, which is the "webhook never arrived" case from `docs/TECHNICAL.md` §4.
+  **Still to build:** signature verification, the HTTP route, rate limiting, and persistence. `event.type` is deliberately not the provider's own event name, so none of this logic has to know what D1 chooses.
 
 - [ ] **P4-06 — Refund webhook**
   Flips `status` to refunded and revokes access.
@@ -379,8 +382,10 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P4-08 — Transactional email**
   Resend or Postmark. Magic links + receipts. Deliverability verified (SPF/DKIM/DMARC) — a magic link in a spam folder is a broken product.
 
-- [ ] **P4-09 — `hasAccess(userId)`**
+- [~] **P4-09 — `hasAccess(userId)`** *(the rule built ahead of its phase; the lookup is not)*
   Returns true iff a non-refunded `paid` purchase exists. Nothing else. Checked **on the server, in the data layer, before content is fetched** — never in a client component, never with CSS.
+  2026-08-03 — `hasPaidAccess` in `lib/payments/purchase.ts`, pure and tested. The specification asks whether *a* paid purchase exists, not whether the *latest* one is paid, and that distinction is deliberate: someone refunded once who buys again is a customer again, and someone who paid twice and was refunded once still bought the guide.
+  `lib/auth/access.ts` still denies everything. What is missing is only the lookup — a session and a database (P4-02, P4-07). When those exist it becomes `hasPaidAccess(await purchasesFor(userId))` and nothing more.
 
 - [ ] **P4-10 — Server-side gating wired into every paid route**
   `/r/[slug]`, `/g/[slug]`, and the gated portions of `/c/[category]`. Verified by inspecting the raw network response as a logged-out user: if the text is in there, it is broken.

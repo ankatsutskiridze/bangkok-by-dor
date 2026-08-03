@@ -25,7 +25,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | 1 — Design system | 30 | 0 | 🟡 19 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | 🟡 P2-20 robots/sitemap built ahead of phase |
 | 3 — Content layer | 15 | 1 | 🟡 P3-02/03/08 built ahead of phase |
-| 4 — Paywall & access | 16 | 0 | ⬜ not started |
+| 4 — Paywall & access | 16 | 0 | 🟡 access + webhook rules built ahead of phase |
 | 5 — Polish | 9 | 0 | ⬜ not started |
 | 6 — Launch | 8 | 0 | ⬜ not started |
 
@@ -58,6 +58,16 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — The money rules, written before the database
+
+- **P4-09 and P4-05, the rule halves**, built ahead of their phase. `lib/payments/purchase.ts` is pure, provider-agnostic and tested — none of it depends on which provider D1 picks or which ORM P4-02 does. These are the rules that decide whether someone keeps what they paid for, so settling them with tests before a database is involved is the point.
+- **`hasPaidAccess` asks whether *a* paid purchase exists, not whether the *latest* one is paid.** The distinction is deliberate and both directions are tested: someone refunded once who buys again is a customer again, and someone who paid twice and was refunded once still bought the guide.
+- **`paid` can never overwrite `refunded`.** Providers do not guarantee delivery order, so a retried authorisation webhook can land *after* a refund. Without that guard it would silently hand access back to someone who already has their money — the kind of bug that is invisible until an accountant finds it.
+- Idempotency is by `providerPaymentId` because providers retry. Without it a retry creates a second purchase row, and a single refund then cancels only one of them.
+- A refund for a payment never recorded is stored rather than dropped: it grants nothing and leaves a trace, which is the "webhook never arrived" case from `docs/TECHNICAL.md` §4.
+- `lib/auth/access.ts` still denies everything, and now says exactly what is missing: only the lookup. When a session and a database exist it becomes `hasPaidAccess(await purchasesFor(userId))` and nothing more.
+- **Verify:** 112 unit tests, 92 E2E tests, all green.
 
 ### 2026-08-03 — robots.txt and sitemap.xml
 
