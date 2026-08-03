@@ -10,12 +10,12 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | | |
 |---|---|
 | **Phase** | 0 — Foundation *(in progress)* |
-| **Current task** | P0-14 partial — Context7 configured, awaiting approval |
-| **Next action** | **Restart the session so Context7 loads**, then **P0-02** — scaffold the Next.js app (App Router, TypeScript strict, Tailwind), checking versions with Context7 rather than from memory. |
-| **Code written** | none — the repository contains documentation, planning and `.mcp.json` only |
+| **Current task** | P0-02 partial — app scaffolded and running; only the Context7 version re-check remains |
+| **Next action** | **P0-03** — create the folder structure from `docs/TECHNICAL.md` §2. Approve Context7 on the next restart and close out P0-02 while you are there. |
+| **Code written** | scaffold only — `app/layout.tsx`, `app/page.tsx`, `app/globals.css` and the four config files. No product code. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
-| **Blocked on** | **P0-12 and P0-16 are blocked on the client** creating the Vercel and Neon accounts (D11 answered: they go in the client's name). **P0-05 / D16** still blocks the visual tasks. P0-02, P0-03, P0-04 can proceed as soon as Context7 is approved. |
+| **Blocked on** | **P0-12 and P0-16 are blocked on the client** creating the Vercel and Neon accounts (D11 answered: they go in the client's name; the request has been sent). **P0-05 / D16** still blocks the visual tasks. P0-03, P0-04, P0-10 and P0-11 are all unblocked and can proceed now. |
 
 ## Progress by phase
 
@@ -58,6 +58,15 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — P0-02, the app is scaffolded and runs
+
+- **Next.js scaffolded and booting.** Next 16.2.12 · React 19.2.4 · Tailwind 4.3.3 · TypeScript ^5 · ESLint ^9. App Router, `strict: true`, no `src/` dir, `@/*` alias, `--empty` template. `typecheck`, `lint` and `build` all pass; `dev` returns 200 at `localhost:3000`.
+- `create-next-app` could not run in place — the existing `.md` files count as conflicts — so it was generated in a temp directory and the output copied in. The project's own `.gitignore` was kept; the template's `.gitignore` and boilerplate `README.md` were not copied.
+- **D21 recorded:** npm, and TypeScript ^5 / ESLint ^9 rather than the newer TS 7 / ESLint 10 that npm lists as latest — `eslint-config-next@16.2.12` targets ESLint 9.
+- **P0-02 left at `[~]`, not `[x]`.** Everything in the *Done when* passes except that versions were confirmed against the npm registry instead of Context7, which is still pending approval. Re-confirm and tick.
+- **⚠ Verify:** `npm audit` shows 3 high advisories, all transitive inside `next` — `postcss` and `sharp@0.34.5` (libvips CVEs). `npm audit fix --force` was **not** run because it downgrades Next to 9.3.3. Details and the candidate fix are noted on P0-15.
+- **Next:** P0-03 (folder structure). P0-12 and P0-16 still wait on the client.
 
 ### 2026-08-03 — Hosting settled (D20), D11 answered, Context7 configured
 

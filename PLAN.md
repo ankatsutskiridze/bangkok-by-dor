@@ -68,8 +68,10 @@ A phase does not start until the previous phase's gate passes.
 - [ ] **P0-01c — Repository hardening** *(depends on P0-11 for the CI checks)*
   Done when: **secret scanning and push protection are enabled** (mandatory — the repo is public per D19), and `main` is protected: PRs required, CI checks (typecheck · lint · unit · Playwright) must pass before merge.
 
-- [ ] **P0-02 — Scaffold the Next.js app**
+- [~] **P0-02 — Scaffold the Next.js app**
   Done when: Next.js App Router + TypeScript `strict: true` + Tailwind installed and booting. Versions checked with Context7 before installing, not from memory. `npm run dev`, `build`, `lint`, `typecheck` all defined and passing on an empty app.
+  2026-08-03 — Next 16.2.12 · React 19.2.4 · Tailwind 4.3.3 · TypeScript ^5 · ESLint ^9. App Router, `strict: true`, no `src/` dir, `@/*` alias, `--empty` template (no demo boilerplate). All four scripts defined and green; `dev` serves 200 at `localhost:3000` and `build` prerenders `/` and `/_not-found`.
+  **Why not `[x]`:** versions were confirmed against the live npm registry, not Context7 — Context7 was still pending approval (P0-14). The intent of the requirement is met and arguably exceeded for version numbers, but the letter of the *Done when* is not. Re-confirm with Context7 next session and tick.
 
 - [ ] **P0-03 — Create the folder structure**
   Done when: the tree in `docs/TECHNICAL.md` §2 exists (`/app/[locale]` route groups, `/components/{ui,guide,marketing}`, `/lib/{auth,payments,content,i18n,utils}`, `/messages`, `/styles`, `/types`). Empty folders are fine; no speculative example files.
@@ -111,6 +113,7 @@ A phase does not start until the previous phase's gate passes.
 
 - [ ] **P0-15 — Dependency hygiene**
   Done when: dependencies pinned, Dependabot (or equivalent) enabled, and a note in the repo that major framework upgrades never ride along with unrelated tasks.
+  **Carried in from P0-02:** `npm audit` reports 3 high advisories, all transitive inside `next@16.2.12` — `postcss <=8.5.17` (Next's own nested copy, build-time) and `sharp@0.34.5` (libvips CVEs; `0.35.3` is the fix). `npm audit fix --force` was **not** run: it downgrades Next to 9.3.3. An npm `overrides` entry forcing `sharp@^0.35` is the candidate fix, but it crosses a major version Next has not tested — validate it against real image optimization (P5-02) rather than blind. Re-check on every Next release; the advisory range currently extends past the latest preview, so upstream has no fix yet either.
 
 - [ ] **P0-16 — Provision the Neon Postgres project** *(infrastructure only — no schema)*
   Done when: a Neon project exists in the **client's** account (D11) with the developer invited, region `eu-central-1` (nearest to the Israeli audience), a `main` branch for production and a `dev` branch for local work; the **pooled** connection string is set as `DATABASE_URL` in the local `.env` and in all three Vercel environments; and a connection is verified from the app.
