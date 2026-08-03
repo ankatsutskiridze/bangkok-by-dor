@@ -42,11 +42,28 @@ Every question that must be answered before the work that depends on it can star
 
 | ID | Question | Blocks | Recommendation on record | Status |
 |---|---|---|---|---|
-| **D16** | Dark or light canvas for v1? | P0-05, P0-06, and every visual task after it | A dark editorial canvas suits the photography-forward luxury positioning and makes images pop; warm white reads calmer and more Apple-like. `docs/DESIGN_SYSTEM.md` §9: pick **one** and execute it perfectly. Both token sets get defined either way. | 🔴 Open |
+| **D16** | Dark or light canvas for v1? | P0-05, P0-06, and **11 of the remaining Phase 1 components** | A dark editorial canvas suits the photography-forward luxury positioning and makes images pop; warm white reads calmer and more Apple-like. `docs/DESIGN_SYSTEM.md` §9: pick **one** and execute it perfectly. Both token sets get defined either way. **⚠ Found 2026-08-03: `docs/BRAND.md` §Mood may already answer this** — "large photography, quiet interface, editorial typography, **deep neutral canvas so that images do the talking**". "Deep neutral" points at dark, and the stated reason matches §9's own argument for it. Not treated as an answer, because the brand document is describing a mood rather than making the choice — but it is evidence, and the client should be shown it when asked. | 🔴 Open |
 | **D17** | Which real place is the free preview? | P2-05, P2-13 | It must be a genuinely strong entry — it is the single highest-leverage block in the product. The brief's "Luka Café" is a placeholder and must not ship. | 🔴 Open |
 | **D18** | Display and body typefaces, and licensing for any paid face | P0-07 | Must be validated **in Hebrew first**. Max two typefaces site-wide. Candidates in `docs/BRAND.md` §5. **Hard glyph requirement, found the hard way on 2026-08-03** — the placeholder stack rendered ₪ as a missing-glyph box in the browser: the chosen face must cover the Hebrew block (U+0590–U+05FF), the shekel sign **₪ U+20AA** and the Thai baht sign **฿ U+0E3F**. All three appear in prices throughout the guide. Verify before licensing, not after. | 🔴 Open |
 | **D25** | **Which icon set?** `docs/DESIGN_SYSTEM.md` §8 fixes the treatment — one set, 1.5px stroke, 20/24px optical sizes — but never names it. This is both a design choice and a dependency decision, so it cannot be settled silently in code. | P1-06, and every component that uses an icon | Lucide is the closest match to the stated treatment and tree-shakes per icon; Heroicons is the alternative. A third option is hand-rolled SVGs for the handful of icons v1 actually needs — no dependency at all, and `docs/RULES.md` asks for that to be ruled out first. Directional icons must mirror in RTL whichever is chosen. | 🔴 Open |
 | **D24** | **Four brand colours fail WCAG AA on one canvas or the other. Adjust the palette, or accept the derived shades?** Measured, not estimated: `stone-500` #8C877F is **3.39:1** on warm white — and `docs/BRAND.md` specifies it as *secondary text*, which needs 4.5:1. On the ink canvas, `teal` is **2.05:1**, `positive` **3.21:1** and `caution` **3.35:1**. `docs/DESIGN_SYSTEM.md` §7 states AA is required, not aspirational, so the two documents conflict. | P0-06, P1-01 onward, P5-05 | Four derived shades are in place and passing (`stone-600` #6F6A62 → 5.10:1; `teal-bright` #5FA8A4 → 7.14:1; `positive-bright` #4E9E74 → 6.06:1; `caution-bright` #C08A4E → 6.55:1). Each keeps the hue and moves only lightness. The client can accept these, or change the brand colour itself — but the failing values cannot ship as body text either way. Note this partly resolves itself with **D16**: the light canvas only needs the `stone-600` fix, while the dark canvas needs the other three. | 🔴 Open |
+
+---
+
+## 4b. Settleable by the developer, not the client
+
+Raised 2026-08-03. These three are **technical or accessibility** decisions, not
+brand or commercial ones. Waiting on the client for them costs time and buys
+nothing — but they are still decisions, so they get recorded here when taken
+rather than assumed in code.
+
+| ID | Why it does not need the client | Recommendation |
+|---|---|---|
+| **D25** | Which icon set is a dependency choice. The client's brand only specifies the *treatment* — one set, 1.5px stroke, 20/24px. | Hand-rolled SVGs. v1 needs roughly eight icons, and `docs/RULES.md` asks for a native solution to be ruled out before adding a dependency. Lucide if the count grows. |
+| **D4** | Magic-link vs passwords is an authentication design choice with a clear answer for a one-time purchase. | Yes, magic link. Already the recommendation on record. |
+| **D24** | Fixing four colours that fail WCAG AA is a correction, not a redesign — and shipping the failing values is not an option either way. | Accept the derived shades **provisionally** so work continues; show the client the before/after and let them substitute their own. |
+
+**Unblocks 4 tasks** between them. D16 remains the client's and unblocks far more.
 
 ---
 
