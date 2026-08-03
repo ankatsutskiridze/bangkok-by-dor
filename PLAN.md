@@ -155,13 +155,18 @@ Every component: one per file, named export, file name matches the component, un
 
 - [ ] **P1-02 — `Tag`** ⛔ **undefined**
   `docs/DESIGN_SYSTEM.md` §4 lists the name and nothing else — no sizes, no variants, no colour role, no statement of whether it is interactive. Not started rather than guessed. Needs a spec added to `DESIGN_SYSTEM.md` before it can be built (§4: "if a design needs a new variant, add it to this file first").
-- [ ] **P1-03 — `Rating`** — stars **and** the numeric value, always together ("★★★★★ 9.7/10"), tabular figures, `dir="ltr"` inside Hebrew.
-- [ ] **P1-04 — `PriceLevel`** — `$`–`$$$$`, gold as a decorative accent only, never as the sole carrier of meaning.
+- [~] **P1-03 — `Rating`** — stars **and** the numeric value, always together ("★★★★★ 9.7/10"), tabular figures, `dir="ltr"` inside Hebrew.
+  2026-08-03. Stars are text characters, not icons, which keeps this clear of **D25** — and `docs/DESIGN_SYSTEM.md` writes its own example in exactly these characters. Five stars always render; filled count is `round(value/2)`, so 9.7 gives five, matching the worked example. The number keeps one decimal even when whole. One `aria-label` for the pair, since announcing the stars and then the figure states the same fact twice.
+  **Caught by looking at the rendered page:** isolating only the number left the flex row following the document direction, so Hebrew rendered "9.7/10 ★★★★★" with the halves swapped. §3 lists *ratings* among the things that stay LTR — the whole unit is now isolated, not just the figure. A rating is one atomic value, and it looks identical in both languages.
+- [~] **P1-04 — `PriceLevel`** — `$`–`$$$$`, gold as a decorative accent only, never as the sole carrier of meaning.
+  2026-08-03. Always four symbols; the unfilled remainder is dimmed so a column of prices does not jitter between rows. Meaning is carried by **how many are filled** and by the label, both of which survive with colour removed — gold is the redundant third signal, never the only one.
 - [~] **P1-05 — `Divider`**
   2026-08-03 — `components/ui/Divider.tsx`. Decorative by default and hidden from assistive technology; `semantic` promotes it to a real separator for the cases where the rule divides two topics rather than decorating.
 - [ ] **P1-06 — `Icon`** — one icon set, 1.5px stroke, 20/24px optical sizes. Directional icons (arrows, chevrons, back) mirror in RTL. ⛔ **D25**
   "One icon set" is specified; **which** set is not. That is both a design choice and a dependency decision — raised as **D25**.
-- [ ] **P1-07 — `Image`** — wraps `next/image` with a required aspect ratio and blur placeholder. Aspect ratios: hero 3:2 (4:5 mobile), gallery 3:2, category card 4:5. `alt` is a required prop; decorative usage must pass `alt=""` explicitly.
+- [~] **P1-07 — `Image`** — wraps `next/image` with a required aspect ratio and blur placeholder. Aspect ratios: hero 3:2 (4:5 mobile), gallery 3:2, category card 4:5. `alt` is a required prop; decorative usage must pass `alt=""` explicitly.
+  2026-08-03. `alt`, `ratio` and `blurDataURL` are all required props with no defaults — an optional `alt` is how empty alt text spreads through a codebase by accident. Ratios are tokens (`--aspect-*`), not `aspect-[3/2]`, which `docs/RULES.md` forbids. The ratio sits on the wrapper and the image fills it, so space is reserved before the bytes arrive.
+  **Not yet verified in a browser** — that needs real photographs, which is P3-11 / **D9**. Structure and props are unit-tested; layout shift is not, and cannot be until there is an image to shift.
 - [~] **P1-08 — `Section`** — vertical rhythm `py-20` → `py-32` → `py-40`.
   2026-08-03. Horizontal bounds stay `Container`'s job, so one section can hold a full-bleed image and a contained paragraph. `labelledBy` exists because a `<section>` without an accessible name is an unnamed landmark a screen reader user has to enter to identify.
 - [~] **P1-09 — `Container`** — 1200px layout max-width, 680px reading measure; gutters 20 / 32 / 48px.

@@ -247,6 +247,15 @@
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 
+  /* Image aspect ratios — `docs/BRAND.md` §Imagery. Tokens rather than
+     `aspect-[3/2]`, which `docs/RULES.md` forbids as an arbitrary value.
+     `hero` is 3:2, but 4:5 on mobile — a landscape hero on a phone leaves
+     almost nothing on screen. */
+  --aspect-hero: 3 / 2;
+  --aspect-hero-mobile: 4 / 5;
+  --aspect-gallery: 3 / 2;
+  --aspect-card: 4 / 5;
+
   /* Layout widths — `docs/DESIGN_SYSTEM.md` §2. */
   --container-layout: 1200px; /* page layout maximum */
   --container-measure: 680px; /* reading measure for body copy */

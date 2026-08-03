@@ -22,7 +22,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | Phase | Tasks | Done | State |
 |---|---|---|---|
 | 0 — Foundation | 18 | 6 | 🟡 gate passed, 12 blocked |
-| 1 — Design system | 30 | 0 | 🟡 5 primitives built, awaiting visual sign-off |
+| 1 — Design system | 30 | 0 | 🟡 8 primitives built, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
@@ -58,6 +58,18 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — Rating, PriceLevel, Image — eight of ten primitives
+
+- **P1-03 `Rating`, P1-04 `PriceLevel`, P1-07 `Image`** built, all `[~]`. That completes every primitive whose specification is fully written down; only `Tag` (no spec at all) and `Icon` (**D25**) remain in that group.
+- **`Rating` had a real bug, found by looking at the rendered page rather than by a test.** Isolating only the number left the flex row following the document direction, so Hebrew rendered "9.7/10 ★★★★★" with the halves swapped. `docs/DESIGN_SYSTEM.md` §3 lists *ratings* — not just numbers — among the things that stay LTR. The whole unit is now isolated. Verified side by side in both locales.
+- Stars are text characters rather than icons, which keeps `Rating` clear of D25 entirely; the design document writes its own example in exactly those characters.
+- `PriceLevel` never lets gold carry meaning alone: the count of filled symbols and the label both survive with colour stripped. Gold is the third, redundant signal.
+- `Image` makes `alt`, `ratio` and `blurDataURL` required with no defaults. Aspect ratios became `--aspect-*` tokens rather than `aspect-[3/2]`, which `docs/RULES.md` forbids.
+- **⚠ `Image` has not been seen in a browser.** That needs real photographs — P3-11, **D9**. Structure is unit-tested; layout shift is not, and cannot be until there is an image to shift.
+- Earlier in the day the shekel sign looked like a missing-glyph box in two screenshots. **It was not a bug** — at 15px on a dark background the ₪ glyph simply reads as a box. Confirmed by zooming to 6×. The chase did leave something useful on D18: on Windows, only Arial, Tahoma, Verdana and Segoe UI Symbol carry ₪, ฿ and Hebrew together, and `ui-sans-serif` resolves to Segoe UI Variable, which has no ₪.
+- **Verify:** 33 unit tests and 33 E2E tests pass.
+- **Next:** nothing is left that does not wait on an answer.
 
 ### 2026-08-03 — CI's first run, and the first five primitives
 

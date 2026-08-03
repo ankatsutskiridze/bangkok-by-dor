@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Divider } from "@/components/ui/Divider";
 import { LtrText } from "@/components/ui/LtrText";
+import { PriceLevel } from "@/components/ui/PriceLevel";
 import { Prose } from "@/components/ui/Prose";
+import { Rating } from "@/components/ui/Rating";
 import { Section } from "@/components/ui/Section";
 import type { Locale } from "@/lib/i18n/routing";
 
@@ -23,6 +25,8 @@ export default async function HomePage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations("Scaffold");
+  const tRating = await getTranslations("Rating");
+  const tPrice = await getTranslations("PriceLevel");
 
   return (
     <main>
@@ -48,6 +52,11 @@ export default async function HomePage({ params }: Props) {
               </LtrText>
             </p>
           </Prose>
+
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <Rating value={9.7} label={tRating("label", { value: "9.7" })} />
+            <PriceLevel value="$$$" label={tPrice("label", { filled: 3 })} />
+          </div>
 
           <Divider className="my-12" />
 

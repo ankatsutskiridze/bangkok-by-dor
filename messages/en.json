@@ -5,5 +5,11 @@
   "Scaffold": {
     "heading": "The scaffold works",
     "note": "Placeholder build-stage text. Replaced with real copy in <ltr>P2-19</ltr>."
+  },
+  "Rating": {
+    "label": "Rated {value} out of 10"
+  },
+  "PriceLevel": {
+    "label": "Price level {filled} out of 4"
   }
 }
