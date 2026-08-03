@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { getDirection, routing } from "@/lib/i18n/routing";
+import { CANVAS } from "@/lib/utils/canvas";
 import "@/styles/globals.css";
 
 type Props = {
@@ -36,7 +37,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} dir={getDirection(locale)}>
+    <html lang={locale} dir={getDirection(locale)} data-canvas={CANVAS}>
       <body>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>

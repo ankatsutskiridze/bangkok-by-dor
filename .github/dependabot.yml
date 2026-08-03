@@ -1,0 +1,40 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # Patch and minor updates arrive as one PR per week. Reviewing fifteen
+      # separate bumps is how a repository ends up ignoring all of them.
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Majors are never automatic — see CLAUDE.md §6. A Next.js or React major
+      # is its own task with its own testing, not a PR that lands beside
+      # unrelated work.
+      - dependency-name: next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-dom
+        update-types: ["version-update:semver-major"]
+      - dependency-name: tailwindcss
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci

@@ -85,8 +85,13 @@ A phase does not start until the previous phase's gate passes.
 - [ ] **P0-05 — Choose the canvas: dark or light** ⛔ D16
   Done when: one canvas is chosen and recorded in `DECISIONS.md`. `docs/DESIGN_SYSTEM.md` §9 says pick one and execute it perfectly — do not build a theme switcher in v1.
 
-- [ ] **P0-06 — Design tokens in code**
+- [~] **P0-06 — Design tokens in code**
   Done when: every token from `docs/DESIGN_SYSTEM.md` exists as a CSS variable in `styles/tokens.css` and is consumed by the Tailwind config — colors (`docs/BRAND.md` §5), spacing scale, type scale with `clamp()`, radii, three elevation levels, motion durations and easings, breakpoints. **Both** the dark and light token sets are defined even though only one ships, so the second theme is a swap and not a rewrite.
+  2026-08-03 — `styles/tokens.css` holds the brand palette, both canvas sets, the type scale with its Hebrew adjustment, radii, three elevation levels, easings, durations and layout widths. Tailwind v4 is CSS-first, so there is no JS config: semantic colours go through `@theme inline` over `var(--canvas-*)`, which is what makes the swap work. Spacing and breakpoints are deliberately **not** redefined — §1 says use Tailwind's 4px scale and the §2 breakpoints already match Tailwind's defaults exactly.
+  Durations became `@utility duration-fast|base|slow`: Tailwind v4 has no `--duration-*` namespace, and `duration-[240ms]` is an arbitrary value, which `docs/RULES.md` forbids.
+  Verified in the browser by `e2e/tokens.spec.ts`, not by eye — a CSS variable that never resolves looks identical to one that does.
+  **Why not `[x]`:** two things are outstanding. The active canvas is a placeholder in `lib/utils/canvas.ts` pending **D16**, and the typeface stacks are system fallbacks pending **D18**. Both are one-line swaps by construction.
+  **⚠ Raises D24 — four brand colours fail WCAG AA on one canvas.** Measured: `stone-500` 3.39:1 on warm white (it is the specified secondary text colour), `teal` 2.05:1, `positive` 3.21:1 and `caution` 3.35:1 on ink. `docs/DESIGN_SYSTEM.md` §7 makes AA required, not aspirational, so four derived shades were added. They need client sign-off or a brand-colour change.
 
 - [ ] **P0-07 — Typography: choose and self-host the fonts**
   Done when: max two typefaces chosen, **validated in Hebrew first**, self-hosted, subset to Hebrew + Latin, `font-display: swap`, preloaded. Tabular figures enabled for ratings/prices/times. The Hebrew adjustment from `docs/DESIGN_SYSTEM.md` §1 is implemented (≈1px larger body, tracking 0 on Hebrew headings).
@@ -122,8 +127,9 @@ A phase does not start until the previous phase's gate passes.
   Done when: Context7 MCP is configured and used for library docs; Figma MCP configured if the client has Figma; any approved UI/UX MCP configured. Recorded in `DECISIONS.md`.
   2026-08-03 — Context7 added at **project scope** in `.mcp.json` (HTTP, `https://mcp.context7.com/mcp`, **no API key committed** — the repo is public per D19). Approval + a session restart are required before its tools are usable. Still outstanding: first real use (P0-02), Figma MCP (waits on whether the client has Figma), UI/UX MCP.
 
-- [ ] **P0-15 — Dependency hygiene**
+- [x] **P0-15 — Dependency hygiene**
   Done when: dependencies pinned, Dependabot (or equivalent) enabled, and a note in the repo that major framework upgrades never ride along with unrelated tasks.
+  Done 2026-08-03. Every dependency pinned exactly — no `^`, no `~` — and `node_modules` plus the lockfile regenerated from scratch to prove the pinned tree still builds. `.github/dependabot.yml` groups minor and patch updates into one weekly PR and **never** opens a major for `next`, `react`, `react-dom`, `tailwindcss` or `typescript`. The rule is written up in `CLAUDE.md` §6, including why `npm audit fix --force` is banned.
   **Carried in from P0-02:** `npm audit` reports 3 high advisories, all transitive inside `next@16.2.12` — `postcss <=8.5.17` (Next's own nested copy, build-time) and `sharp@0.34.5` (libvips CVEs; `0.35.3` is the fix). `npm audit fix --force` was **not** run: it downgrades Next to 9.3.3. An npm `overrides` entry forcing `sharp@^0.35` is the candidate fix, but it crosses a major version Next has not tested — validate it against real image optimization (P5-02) rather than blind. Re-check on every Next release; the advisory range currently extends past the latest preview, so upstream has no fix yet either.
 
 - [ ] **P0-16 — Provision the Neon Postgres project** *(infrastructure only — no schema)*

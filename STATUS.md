@@ -11,7 +11,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 |---|---|
 | **Phase** | 0 — Foundation *(in progress)* |
 | **Current task** | none in progress |
-| **Next action** | Nothing in Phase 0 is both unblocked and unstarted. **Push and watch CI run for the first time**, then wait: **P0-05 / D16** gates every visual task, **P0-12 / P0-16** wait on the client's accounts. On the next restart, approve Context7 and close out P0-02. |
+| **Next action** | **Push** — CI has still never run, and `origin` is 4 commits behind. Then the project genuinely waits on the client: **D16** (canvas), **D24** (contrast), **D18** (typefaces), and the Vercel/Neon accounts. On the next restart, approve Context7 and close out P0-02. |
 | **Code written** | foundation only — i18n/RTL routing, env validation, the `LtrText` utility, unit + E2E smoke tests, CI workflow. No product UI. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
@@ -21,7 +21,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 18 | 5 | 🟡 in progress |
+| 0 — Foundation | 18 | 6 | 🟡 in progress |
 | 1 — Design system | 30 | 0 | ⬜ not started |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
@@ -31,9 +31,9 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 ## Decisions outstanding
 
-17 open, 3 answered. Full detail in `DECISIONS.md`.
+18 open, 3 answered. Full detail in `DECISIONS.md`.
 
-- **Needed soon** (blocks work in the next two phases): D16 canvas · D18 typefaces · D6 category list · D17 free-preview place · D10 English at launch
+- **Needed soon** (blocks work in the next two phases): D16 canvas · **D24 palette contrast** · D18 typefaces · D6 category list · D17 free-preview place · D10 English at launch
 - **Needed before Phase 3**: D8 content source *(narrowed by D19 — the repo is public, so paid content cannot live in it as MDX)* · D7 launch volume · D9 photo rights
 - **Needed before Phase 4**: D1 payment provider · D2 entity & VAT · D3 refund policy · D4 access method · D5 currency
 - **Needed before launch**: D12 email capture · D13 analytics · D14 support channel · D15 v1+ roadmap
@@ -58,6 +58,17 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — P0-15 dependencies, P0-06 design tokens
+
+- **P0-15 done.** Every dependency pinned exactly; `node_modules` and the lockfile deleted and rebuilt to prove the pinned tree still builds. `.github/dependabot.yml` groups minor and patch into one weekly PR and never opens a major for `next`, `react`, `react-dom`, `tailwindcss` or `typescript`. Rule written into `CLAUDE.md` §6 (existing §6 renumbered to §7).
+- **P0-06 mostly done, left `[~]`.** `styles/tokens.css` holds the palette, **both** canvas sets, the type scale with its Hebrew adjustment, radii, three elevations, easings, durations and layout widths. Tailwind v4 is CSS-first — no JS config — so semantic colours go through `@theme inline` over `var(--canvas-*)`, which is what makes the canvas a swap rather than a rewrite. Spacing and breakpoints deliberately not redefined; the spec says to use Tailwind's defaults and they already match.
+- Durations became `@utility duration-fast|base|slow`. Tailwind v4 has no `--duration-*` namespace, and `duration-[240ms]` is an arbitrary value, which `docs/RULES.md` forbids.
+- The active canvas is one constant in `lib/utils/canvas.ts`, currently `dark` **as a placeholder, not a decision** — D16 is still open and the file says so loudly.
+- **⚠ New decision D24, and it needs the client.** Four brand colours miss WCAG AA, measured: `stone-500` **3.39:1** on warm white — and `docs/BRAND.md` specifies it as *secondary text*; on ink, `teal` **2.05:1**, `positive` **3.21:1**, `caution` **3.35:1**. `docs/DESIGN_SYSTEM.md` §7 makes AA required, so the two documents genuinely conflict. Four derived shades are in place and passing, flagged in the CSS as pending sign-off.
+- **Verify:** 26 E2E tests pass, including that the canvas colours actually resolve in the browser, that neither canvas uses pure black or white, that Hebrew body copy renders larger than English, and that reduced-motion suppresses transitions.
+- **Push failed from the agent** — `gh` is not authenticated and the git credential manager cannot prompt here. `origin` is 4 commits behind and CI has still never executed.
+- **Next:** push. Then the project waits on D16, D24, D18 and the client's accounts.
 
 ### 2026-08-03 — P0-10 security headers
 

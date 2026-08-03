@@ -83,7 +83,16 @@ If a session produced no code (planning, research, discussion), still append a S
 - No commented-out code, no `console.log`, no dead code on `main`.
 - No secrets committed. `.env.example` is committed; `.env*` is not.
 
-## 6. Quick orientation
+## 6. Dependencies
+
+- **Versions are pinned exactly.** No `^`, no `~`. `npm ci` must install the same tree in a year that it installs today; a caret means CI and a teammate's laptop can quietly diverge from production.
+- **A major version upgrade is its own task, its own branch and its own PR.** It never rides along with unrelated work. If a framework upgrade breaks something, the diff should contain nothing but the upgrade — otherwise the bisect is worthless. Dependabot is configured to never open major PRs for `next`, `react`, `react-dom`, `tailwindcss` or `typescript` for exactly this reason.
+- Adding a dependency requires stating why a native or already-installed solution will not do (`docs/RULES.md`). Two were removed on these grounds already: `vite-tsconfig-paths` and `@testing-library/jest-dom`.
+- Run `npm audit` after any dependency change. Never `npm audit fix --force` — it downgrades across majors to satisfy an advisory.
+
+---
+
+## 7. Quick orientation
 
 - **Product:** paid single-city Bangkok travel guide. ₪79 once, lifetime access.
 - **Audience:** Israeli travelers. Hebrew (RTL) is primary, English secondary.

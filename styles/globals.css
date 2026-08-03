@@ -1,1 +1,32 @@
 @import "tailwindcss";
+@import "./tokens.css";
+
+/**
+ * Global baseline. Deliberately thin — everything visual belongs in a
+ * component, and every value belongs in tokens.css.
+ */
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/**
+ * `docs/DESIGN_SYSTEM.md` §5 calls this non-negotiable, so it is enforced
+ * globally rather than left to each component to remember. The motion
+ * primitives themselves are P1-28; this is the floor beneath them.
+ *
+ * Durations are near-zero rather than zero so that transitionend and
+ * animationend still fire — some interactions depend on them to clean up.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
