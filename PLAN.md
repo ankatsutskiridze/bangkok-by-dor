@@ -189,7 +189,10 @@ Every component: one per file, named export, file name matches the component, un
   **Throws on an empty `cons` array rather than degrading.** `docs/RULES.md` §1 says a place with no downsides does not get published; a component that silently rendered a pros-only list would turn a recommendation into an advertisement, which is the one thing this product cannot survive. The schema will also enforce `.min(1)` at P3-02 — belt and braces, deliberately.
 - [ ] **P1-20 — `TipsList`**
 - [ ] **P1-21 — `BestForTags`** — fixed list only: Couples · Solo travelers · Digital nomads · Families · Luxury travelers · Food lovers · First-time visitors.
-- [ ] **P1-22 — `MapsButton`** — opens in a new tab with `rel="noopener"`. The single most important action in the product.
+- [~] **P1-22 — `MapsButton`** — opens in a new tab with `rel="noopener"`. The single most important action in the product.
+  2026-08-03. A real `<a>`, not a button with a handler — it navigates, so it must be middle-clickable, copyable and announced as a link. `Button`'s classes were extracted to `buttonClasses()` so there is one definition of a primary button rather than a second copy that drifts.
+  **Validates the URL rather than trusting it.** `docs/RULES.md` §1 says the only outbound link on a recommendation is Google Maps, so a non-Maps host throws. Hosts match **exactly, never by suffix** — a suffix test accepts `google.com.attacker.example`, which is the classic way past this check. Country domains (`google.co.il`) are deliberately absent; each one widens the check and gets added when a real URL needs it.
+  `rel="noopener noreferrer"` — the spec asks for `noopener`; `noreferrer` is added because the referrer of a paywalled URL is not ours to hand to a third party.
 - [ ] **P1-23 — `RelatedGrid`** — 3–5 items.
 - [ ] **P1-24 — `FAQAccordion`** — smooth height, `duration-base`.
 - [ ] **P1-25 — `PricingCard`** — ₪79 · lifetime, always visible next to the CTA.
@@ -208,8 +211,11 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P1-29 — Loading, empty and error states**
   Done when: skeletons match the final layout (never spinners on content areas), empty states are written in Dor's voice (never "No data found"), errors are plain language and always offer a next action.
 
-- [ ] **P1-30 — RTL/LTR verification pass**
+- [~] **P1-30 — RTL/LTR verification pass**
   Done when: every component above has been visually checked in both directions at 375px and desktop, and a Playwright test asserts no horizontal scroll at 375px in both locales.
+  2026-08-03 — the machine half is built. `e2e/rtl-parity.spec.ts` attaches a full-page screenshot of each locale at each width to the Playwright report, so the human check is two clicks rather than a local setup, and rerunning after **D16** puts before and after side by side. It also asserts what is tedious to eyeball: no element overflows the viewport in either direction, the layout genuinely mirrors, and **no physical-direction utility reaches the markup** — `ml-`, `pr-`, `text-left` and friends work perfectly in English and silently break Hebrew.
+  One test was wrong on the first attempt: it measured the heading, which is block-level and spans the full container in both directions, so its box never moves. Measured on a button now, which shrinks to its content.
+  **Why not `[x]`:** the human visual pass is the actual requirement, and it cannot be signed off while the canvas (D16) and typefaces (D18) are placeholders. The harness is ready for the moment they land.
 
 ---
 

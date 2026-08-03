@@ -44,6 +44,18 @@ const variants: Record<Variant, string> = {
   link: "text-link underline underline-offset-4 hover:opacity-92",
 };
 
+/**
+ * The Button spec's classes, without the `<button>` element.
+ *
+ * `MapsButton` (P1-22) has to be a real `<a>` — it navigates, so it must be
+ * middle-clickable, copyable and announced as a link. Exported rather than
+ * duplicated so there is one definition of what a primary button looks like;
+ * a second copy would drift the moment either is touched.
+ */
+export function buttonClasses(variant: Variant = "primary", className?: string) {
+  return cn(base, variants[variant], className);
+}
+
 export function Button({
   variant = "primary",
   isLoading = false,
@@ -59,7 +71,7 @@ export function Button({
       type="button"
       disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
-      className={cn(base, variants[variant], className)}
+      className={buttonClasses(variant, className)}
       {...props}
     >
       {children}

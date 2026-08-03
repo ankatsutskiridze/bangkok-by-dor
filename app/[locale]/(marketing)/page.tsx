@@ -3,7 +3,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Divider } from "@/components/ui/Divider";
+import { MapsButton } from "@/components/guide/MapsButton";
 import { PaywallGate } from "@/components/guide/PaywallGate";
+import { ProsConsList } from "@/components/guide/ProsConsList";
 import { LtrText } from "@/components/ui/LtrText";
 import { PriceLevel } from "@/components/ui/PriceLevel";
 import { Prose } from "@/components/ui/Prose";
@@ -85,6 +87,22 @@ export default async function HomePage({ params }: Props) {
             <Button variant="link">Link</Button>
             <Button disabled>Disabled</Button>
           </div>
+
+          <div className="mt-8">
+            <MapsButton
+              href="https://www.google.com/maps/place/Vertigo+Rooftop"
+              label="Open in Google Maps"
+              accessibleLabel="Open in Google Maps, opens in a new tab"
+            />
+          </div>
+
+          <ProsConsList
+            className="mt-12"
+            prosHeading="Pros"
+            consHeading="Cons"
+            pros={["The view is genuinely the best in the city", "Staff speak English"]}
+            cons={["It is not cheap", "Always full on weekends"]}
+          />
         </Container>
       </Section>
     </main>

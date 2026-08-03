@@ -22,7 +22,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | Phase | Tasks | Done | State |
 |---|---|---|---|
 | 0 — Foundation | 18 | 6 | 🟡 gate passed, 12 blocked |
-| 1 — Design system | 30 | 0 | 🟡 10 components built, awaiting visual sign-off |
+| 1 — Design system | 30 | 0 | 🟡 11 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
@@ -58,6 +58,15 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — MapsButton and the RTL verification harness
+
+- **P1-22 `MapsButton`.** `docs/UX.md` §5 calls it "the single most important action on the page" — a buyer standing in Bangkok taps it and starts walking. A real `<a>`, not a button with a handler. `Button`'s classes were extracted to `buttonClasses()` so a primary button has one definition rather than a second copy that drifts.
+- **It validates the URL rather than trusting it.** `docs/RULES.md` §1 allows exactly one outbound link, so a non-Maps host throws. Hosts match **exactly, never by suffix** — a suffix test would accept `google.com.attacker.example`. The first version of the check was too strict and a test caught it: `maps.google.com/?q=…` is legitimate but has no `/maps` path.
+- **P1-30 partial — the machine half of the RTL pass.** `e2e/rtl-parity.spec.ts` attaches a full-page screenshot of each locale at each width to the report, so the human check is two clicks; rerunning after D16 puts before and after side by side. It also asserts no element overflows the viewport, that the layout genuinely mirrors, and that **no physical-direction utility reaches the markup** — `ml-`, `pr-`, `text-left` work perfectly in English and silently break Hebrew.
+- One of those tests was wrong on the first attempt. It measured the heading, which is block-level and spans the full container in both directions, so its box never moves however the text flows. Measured on a button now. **The test was wrong, not the layout.**
+- **Verify:** 49 unit tests, 51 E2E tests, all green.
+- **Next:** the human visual pass is the actual P1-30 requirement and cannot be signed off while the canvas and typefaces are placeholders. The harness is ready for the moment D16 and D18 land.
 
 ### 2026-08-03 — The paywall gate, and the test that proves it
 
