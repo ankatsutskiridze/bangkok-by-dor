@@ -66,6 +66,12 @@
   /* `docs/DESIGN_SYSTEM.md` §Button spec: ink ring on light surfaces. */
   --canvas-focus: var(--brand-ink);
   --canvas-on-accent: var(--brand-ink);
+
+  /* Primary action. The spec says "ink background, warm-white text", which is
+     the light canvas written out literally. Expressed as tokens so the dark
+     canvas can invert it — see the note there. */
+  --canvas-action: var(--brand-ink);
+  --canvas-on-action: var(--brand-warm-white);
 }
 
 /* ==========================================================================
@@ -87,6 +93,13 @@
   /* `docs/DESIGN_SYSTEM.md` §Button spec: warm-white ring on dark surfaces. */
   --canvas-focus: var(--brand-warm-white);
   --canvas-on-accent: var(--brand-ink);
+
+  /* Inverted from the light canvas. Taken literally, "ink background,
+     warm-white text" would put an ink button on an ink surface — invisible.
+     The intent of the spec is a primary action that inverts the canvas, and
+     that is what this expresses. */
+  --canvas-action: var(--brand-warm-white);
+  --canvas-on-action: var(--brand-ink);
 }
 
 /* ==========================================================================
@@ -111,6 +124,13 @@
   --track-display-2: -0.02em;
   --track-h1: -0.02em;
   --track-h2: -0.01em;
+
+  /* Reading measure — `docs/BRAND.md` §Typography: 60–75 characters, shorter in
+     Hebrew at ~55–65. Midpoints of each range.
+     ⚠ `ch` is the width of "0", an approximation of average character width.
+     Re-measure against the real typeface at P0-07 (D18) — the placeholder
+     stack below is not what will ship. */
+  --measure-prose: 68ch;
 }
 
 /**
@@ -129,6 +149,8 @@
   --track-display-2: 0;
   --track-h1: 0;
   --track-h2: 0;
+
+  --measure-prose: 60ch;
 }
 
 /* ==========================================================================
@@ -167,6 +189,10 @@
   --color-accent: var(--canvas-accent);
   --color-on-accent: var(--canvas-on-accent);
   --color-focus: var(--canvas-focus);
+  --color-action: var(--canvas-action);
+  --color-on-action: var(--canvas-on-action);
+
+  --container-prose: var(--measure-prose);
 
   --text-display-1: var(--size-display-1);
   --text-display-1--line-height: 1.02;
@@ -249,4 +275,12 @@
 
 @utility duration-slow {
   transition-duration: var(--duration-slow);
+}
+
+/**
+ * The pressed state from `docs/DESIGN_SYSTEM.md` §Button spec. A utility for
+ * the same reason as the durations: `scale-[0.985]` is an arbitrary value.
+ */
+@utility scale-pressed {
+  scale: 0.985;
 }

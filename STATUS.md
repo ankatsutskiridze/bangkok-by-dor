@@ -9,9 +9,9 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | | |
 |---|---|
-| **Phase** | 0 — Foundation *(in progress)* |
+| **Phase** | 0 gate passed · 1 — Design system *(in progress)* |
 | **Current task** | none in progress |
-| **Next action** | **Push** — CI has still never run, and `origin` is 4 commits behind. Then the project genuinely waits on the client: **D16** (canvas), **D24** (contrast), **D18** (typefaces), and the Vercel/Neon accounts. On the next restart, approve Context7 and close out P0-02. |
+| **Next action** | **P0-01c is now unblocked and is yours** — CI has run, so the check names exist: enable secret scanning + push protection, and protect `main`. Then the project waits on **D16**, **D24**, **D18**, **D25** and the client's accounts. On the next restart, approve Context7 and close out P0-02. |
 | **Code written** | foundation only — i18n/RTL routing, env validation, the `LtrText` utility, unit + E2E smoke tests, CI workflow. No product UI. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
@@ -21,8 +21,8 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 18 | 6 | 🟡 in progress |
-| 1 — Design system | 30 | 0 | ⬜ not started |
+| 0 — Foundation | 18 | 6 | 🟡 gate passed, 12 blocked |
+| 1 — Design system | 30 | 0 | 🟡 5 primitives built, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
@@ -31,9 +31,9 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 ## Decisions outstanding
 
-18 open, 3 answered. Full detail in `DECISIONS.md`.
+19 open, 3 answered. Full detail in `DECISIONS.md`.
 
-- **Needed soon** (blocks work in the next two phases): D16 canvas · **D24 palette contrast** · D18 typefaces · D6 category list · D17 free-preview place · D10 English at launch
+- **Needed soon** (blocks work in the next two phases): D16 canvas · **D24 palette contrast** · D18 typefaces · **D25 icon set** · D6 category list · D17 free-preview place · D10 English at launch
 - **Needed before Phase 3**: D8 content source *(narrowed by D19 — the repo is public, so paid content cannot live in it as MDX)* · D7 launch volume · D9 photo rights
 - **Needed before Phase 4**: D1 payment provider · D2 entity & VAT · D3 refund policy · D4 access method · D5 currency
 - **Needed before launch**: D12 email capture · D13 analytics · D14 support channel · D15 v1+ roadmap
@@ -58,6 +58,18 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — CI's first run, and the first five primitives
+
+- **CI ran for the first time and passed on the first attempt.** All three jobs green on both pushed commits: typecheck/lint/unit (26s), Playwright (57s), Lighthouse (114s). Verified through the public GitHub API — `gh` is still unauthenticated here.
+- **Phase 0's gate is passed** (`PLAN.md` §4): the app boots, tokens are in code, he/en routing works, CI is green. Twelve Phase 0 tasks remain but every one of them is waiting on an answer, not on work.
+- **Phase 1 started, and it is safe to have started.** Components consume *semantic* tokens — `bg-surface`, `text-text`, `bg-action` — so answering D16 or D24 changes a token value and no component code. The cost is a second visual review, not a rewrite.
+- **P1-01 `Button`, P1-05 `Divider`, P1-08 `Section`, P1-09 `Container`, P1-10 `Prose`** built, all `[~]`. Left partial because the Definition of Done demands a visual check in both directions and against the Apple/Linear/Stripe bar — impossible while the canvas and typefaces are placeholders.
+- Two judgement calls on `Button`, both in the code: the primary variant inverts per canvas (read literally, "ink background" would be invisible on the ink canvas), and the `link` variant keeps text metrics rather than a 44px box, per the WCAG 2.2 §2.5.8 inline exemption. Loading is `aria-busy` + dimming with **no spinner** — a spinner freezes under reduced motion, which is worse than none.
+- **Two tasks stopped rather than guessed.** `Tag` (P1-02) has a name in `DESIGN_SYSTEM.md` §4 and no specification at all. `Icon` (P1-06) specifies the treatment but never names the set — raised as **D25**.
+- No dependency added for class merging: `lib/utils/cn.ts` is six lines, and `tailwind-merge` solves a conflict problem these components do not have.
+- **Verify:** 18 unit tests and 33 E2E tests pass. Utility generation was checked against the built CSS, not assumed — including that `hover:` compiles inside `@media (hover: hover)`.
+- **Next:** P0-01c is yours to click. Everything else waits.
 
 ### 2026-08-03 — P0-15 dependencies, P0-06 design tokens
 

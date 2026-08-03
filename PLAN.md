@@ -146,18 +146,28 @@ Every component: one per file, named export, file name matches the component, un
 
 ### Primitives
 
-- [ ] **P1-01 — `Button`**
+- [~] **P1-01 — `Button`**
   Variants: primary / secondary / ghost / link. 44px mobile / 48px desktop, `px-6`, radius `md`. Primary = ink bg + warm-white text, hover 92% opacity, active scale 0.985. Focus ring 2px ink on light surfaces / 2px warm-white on dark, 2px offset. **Never gold for focus** — #C8A96A measures ~2.1:1 and fails the 3:1 UI minimum.
+  2026-08-03. All four variants. `outline` rather than `ring`, so an ancestor's `overflow` can never clip the focus indicator. Verified in the browser: focus outline ≥2px with a real colour, every non-link button ≥44px tall at 375px, disabled buttons genuinely disabled. Hover is confirmed to compile inside `@media (hover: hover)`, so a tap does not leave it stuck.
+  **Two judgement calls, both noted in the code:** the primary variant uses `--canvas-action`, which inverts per canvas — read literally, "ink background" would put an ink button on the ink canvas and make it invisible. And the `link` variant keeps text metrics instead of a 44px box; WCAG 2.2 §2.5.8 exempts targets inside a sentence, and forcing the height would break the paragraph's line rhythm.
+  Loading is `disabled` + `aria-busy` + dimming, with **no spinner** — a spinner freezes under `prefers-reduced-motion`, which is worse than none. The final treatment belongs to P1-29.
+  **Why not `[x]`:** the Definition of Done requires a visual check in both directions and against the Apple/Linear/Stripe bar. Neither is possible while the canvas (D16) and typefaces (D18) are placeholders.
 
-- [ ] **P1-02 — `Tag`**
+- [ ] **P1-02 — `Tag`** ⛔ **undefined**
+  `docs/DESIGN_SYSTEM.md` §4 lists the name and nothing else — no sizes, no variants, no colour role, no statement of whether it is interactive. Not started rather than guessed. Needs a spec added to `DESIGN_SYSTEM.md` before it can be built (§4: "if a design needs a new variant, add it to this file first").
 - [ ] **P1-03 — `Rating`** — stars **and** the numeric value, always together ("★★★★★ 9.7/10"), tabular figures, `dir="ltr"` inside Hebrew.
 - [ ] **P1-04 — `PriceLevel`** — `$`–`$$$$`, gold as a decorative accent only, never as the sole carrier of meaning.
-- [ ] **P1-05 — `Divider`**
-- [ ] **P1-06 — `Icon`** — one icon set, 1.5px stroke, 20/24px optical sizes. Directional icons (arrows, chevrons, back) mirror in RTL.
+- [~] **P1-05 — `Divider`**
+  2026-08-03 — `components/ui/Divider.tsx`. Decorative by default and hidden from assistive technology; `semantic` promotes it to a real separator for the cases where the rule divides two topics rather than decorating.
+- [ ] **P1-06 — `Icon`** — one icon set, 1.5px stroke, 20/24px optical sizes. Directional icons (arrows, chevrons, back) mirror in RTL. ⛔ **D25**
+  "One icon set" is specified; **which** set is not. That is both a design choice and a dependency decision — raised as **D25**.
 - [ ] **P1-07 — `Image`** — wraps `next/image` with a required aspect ratio and blur placeholder. Aspect ratios: hero 3:2 (4:5 mobile), gallery 3:2, category card 4:5. `alt` is a required prop; decorative usage must pass `alt=""` explicitly.
-- [ ] **P1-08 — `Section`** — vertical rhythm `py-20` → `py-32` → `py-40`.
-- [ ] **P1-09 — `Container`** — 1200px layout max-width, 680px reading measure; gutters 20 / 32 / 48px.
-- [ ] **P1-10 — `Prose`** — body copy block, 55–65 characters in Hebrew, 60–75 in English.
+- [~] **P1-08 — `Section`** — vertical rhythm `py-20` → `py-32` → `py-40`.
+  2026-08-03. Horizontal bounds stay `Container`'s job, so one section can hold a full-bleed image and a contained paragraph. `labelledBy` exists because a `<section>` without an accessible name is an unnamed landmark a screen reader user has to enter to identify.
+- [~] **P1-09 — `Container`** — 1200px layout max-width, 680px reading measure; gutters 20 / 32 / 48px.
+  2026-08-03. Gutters are padding rather than margin, so a full-bleed child can cancel them instead of fighting a centred max-width.
+- [~] **P1-10 — `Prose`** — body copy block, 55–65 characters in Hebrew, 60–75 in English.
+  2026-08-03. The measure is a token that changes under `:lang(he)`, so the component never needs to know its language. ⚠ Expressed in `ch`, which is the width of "0" — an approximation. **Re-measure against the shipping typeface at P0-07 (D18).**
 
 ### Composites
 
