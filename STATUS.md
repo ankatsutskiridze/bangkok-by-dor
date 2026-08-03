@@ -24,7 +24,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | 0 — Foundation | 18 | 7 | 🟡 gate passed, 11 blocked |
 | 1 — Design system | 30 | 0 | 🟡 19 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
-| 3 — Content layer | 15 | 0 | 🟡 P3-02 schemas built ahead of phase |
+| 3 — Content layer | 15 | 1 | 🟡 P3-02/03/08 built ahead of phase |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
 | 5 — Polish | 9 | 0 | ⬜ not started |
 | 6 — Launch | 8 | 0 | ⬜ not started |
@@ -58,6 +58,17 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — Content fetching layer and related-recommendation logic
+
+- **P3-08 done** and **P3-03 partial**, both ahead of their phase by the same agreement as P3-02.
+- **`relatedFor` orders by rating *proximity*, not by highest rated.** Someone reading about a modest café is looking for another place of the same standing, not the most expensive rooftop in the city. Ties break on slug rather than relying on sort stability, so a rebuild cannot silently reshuffle the grid and force every cached page to revalidate.
+- **One thing inferred rather than specified:** a category with fewer than three published places. Returning one leaves a broken-looking grid, hiding the section strands the reader — so the shortfall is filled from other categories, still by proximity. Flagged on the task to confirm against real content at P3-12.
+- **`parseCollection` reports every broken entry at once**, not just the first. Failing fast turns a fifty-place content import into a dozen build-fix-build cycles. Each error names the entry and says *fix the content, not the schema* — the quiet fallback is the failure mode this file exists to prevent, because on a paid guide it ships a hollow page to someone who has already paid.
+- **`ContentSource` splits the public shell from the paid body deliberately.** One call returning a whole recommendation would put the paid text in memory — one careless prop from the HTML — before anyone checked whether the reader had paid. Two methods make "we forgot to check" a missing call rather than a missing conditional, the same reasoning as `PaywallGate` taking its body as a function.
+- P3-03 stays `[~]` because no adapter exists; that is **D8**, and D19 already rules out MDX inside this repository. The interface is the part that does not depend on the answer.
+- One of my tests was wrong again: it asserted five related items from a pool holding four same-category candidates. Four is inside the specified 3–5, so the code was right. Split into two tests — one for the range, one for the cap.
+- **Verify:** 99 unit tests, 82 E2E tests, all green.
 
 ### 2026-08-03 — Content schemas, built ahead of their phase
 

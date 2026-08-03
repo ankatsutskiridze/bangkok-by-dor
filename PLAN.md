@@ -297,8 +297,11 @@ Every component: one per file, named export, file name matches the component, un
   **On D6:** `docs/CONTENT.md` §2 lists fifteen and instructs "Build for 15; publish what exists", so the enum holds the thirteen **place** categories — Getting Around and First Time in Bangkok are Guides, per the same section. A narrower answer only ever removes entries, and empty categories hide themselves.
   **Why not `[x]`:** **D15** is unanswered. If v1+ adds other cities, the model needs a `city` dimension — additive, but the decision belongs before the content is seeded, not after.
 
-- [ ] **P3-03 — Content fetching layer**
+- [~] **P3-03 — Content fetching layer** *(built ahead of its phase, by agreement)*
   Validation runs at build/fetch time and **fails loudly**. Invalid content never renders a half-empty page. The gated body is a separate fetch from the public shell.
+  2026-08-03 — `lib/content/validate.ts` and `lib/content/source.ts`. The temptation this removes is the quiet fallback: skip the broken entry, render what parsed, log a warning nobody reads. On a paid guide that ships a hollow page to someone who has already paid, which costs more than a failed build. `parseCollection` reports **every** broken entry at once — failing on the first turns a content import into a dozen build-fix-build cycles — and every error names the entry and says *fix the content, not the schema*.
+  **`ContentSource` splits the shell from the body deliberately.** One call returning a whole recommendation would put the paid text in memory, one careless prop from the HTML, before anyone checked whether the reader had paid. Two methods make "we forgot to check" a missing call rather than a missing conditional — the same reasoning as `PaywallGate` taking its body as a function.
+  **Why not `[x]`:** no adapter exists. That is **D8** — CMS or MDX — and D19 already rules out MDX inside this repository. The interface is the part that does not depend on the answer.
 
 - [ ] **P3-04 — Static generation and revalidation**
   `generateStaticParams` for recommendations, guides and categories. Content-change webhook → `revalidateTag`. **The paid body is never included in the static HTML** — static-generate the public shell (name, hero, meta) only.
@@ -314,8 +317,11 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P3-07 — `/g/[slug]` — guide articles**
   "First Time in Bangkok" and "Getting Around". Same paywall tier as recommendations.
 
-- [ ] **P3-08 — Related recommendations logic**
+- [x] **P3-08 — Related recommendations logic**
   Defaults to same-category places with the nearest rating; manually overridable per place. 3–5 items.
+  Done 2026-08-03 — `lib/content/related.ts`. A manual list wins outright, minus self-references and duplicates. Otherwise same category by rating **proximity**, not by highest rated: someone reading about a modest café is looking for another place of the same standing, not the most expensive rooftop in the city.
+  Ties break on slug rather than relying on sort stability, so the same input always produces the same page — otherwise a rebuild silently reshuffles the grid and every cached page needs revalidating for nothing.
+  **One thing inferred rather than specified:** what happens when a category holds fewer than three published places. Returning one leaves a broken-looking grid; hiding the section strands the reader. The shortfall is filled from other categories, still by proximity, so weaker matches appear only when nothing closer exists. **Confirm against real content at P3-12.**
 
 - [ ] **P3-09 — Google Maps deep links**
   Every recommendation. New tab, `rel="noopener"`. The only outbound link on a recommendation page. Verified per place that the URL opens the correct location.
