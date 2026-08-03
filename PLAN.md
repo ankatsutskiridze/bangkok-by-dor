@@ -290,8 +290,12 @@ Every component: one per file, named export, file name matches the component, un
   CMS (Sanity / Payload) vs MDX in-repo. Recommendation on record: **a CMS** — the business model promises lifetime updates and Dor cannot depend on a developer to publish a café. MDX is acceptable only if the client accepts that every content change is a code deploy.
   **Constraint from D19:** the repository is public. MDX-in-repo would publish the entire paid guide for free and make the paywall decorative. If MDX is still chosen, the content must live outside this repo (private submodule or a separate private repo) — settle that here, not later.
 
-- [ ] **P3-02 — Zod content schemas**
+- [~] **P3-02 — Zod content schemas** *(built ahead of its phase, by agreement)*
   `Recommendation`, `Guide`, `Category`, `Image`, exactly as specified in `docs/CONTENT.md` §1 and `BUSINESS_LOGIC.md` §6.2. Every field required except `bestTimeNote` and manual `related` overrides. `cons` has `.min(1)` — enforced in the schema, not by convention. `rating` 1–10 with one decimal. `bestFor` and `bestTimeToVisit` are closed enums.
+  2026-08-03 — `lib/content/schemas.ts`. Every count from the specification is enforced, not just the presence of a field: `pros` 3–5, `cons` 1–3, `dontMiss` 2–5, `tips` 2–5, `gallery` 3–8, `related` 3–5, `bestFor` 2–4. Array items are `.min(1)` too, because `cons: [""]` is a place with no downsides wearing a disguise. `rating` refuses a second decimal — the value is printed verbatim next to the stars, so 9.73 would display as 9.7 and sort as something else.
+  `googleMapsUrl` is validated by the **same** function the `MapsButton` uses, now extracted to `lib/content/maps.ts`. Two gates, one definition; a second copy would drift and one of them would start letting things through. An affiliate link cannot enter the system at all.
+  **On D6:** `docs/CONTENT.md` §2 lists fifteen and instructs "Build for 15; publish what exists", so the enum holds the thirteen **place** categories — Getting Around and First Time in Bangkok are Guides, per the same section. A narrower answer only ever removes entries, and empty categories hide themselves.
+  **Why not `[x]`:** **D15** is unanswered. If v1+ adds other cities, the model needs a `city` dimension — additive, but the decision belongs before the content is seeded, not after.
 
 - [ ] **P3-03 — Content fetching layer**
   Validation runs at build/fetch time and **fails loudly**. Invalid content never renders a half-empty page. The gated body is a separate fetch from the public shell.

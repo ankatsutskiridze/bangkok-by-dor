@@ -24,7 +24,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | 0 — Foundation | 18 | 7 | 🟡 gate passed, 11 blocked |
 | 1 — Design system | 30 | 0 | 🟡 19 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
-| 3 — Content layer | 15 | 0 | ⬜ not started |
+| 3 — Content layer | 15 | 0 | 🟡 P3-02 schemas built ahead of phase |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
 | 5 — Polish | 9 | 0 | ⬜ not started |
 | 6 — Launch | 8 | 0 | ⬜ not started |
@@ -58,6 +58,17 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — Content schemas, built ahead of their phase
+
+- **P3-02 built out of order, by agreement** — the client asked to keep moving rather than wait, and this was the most valuable thing not gated on an answer. Recorded here so the phase order in `PLAN.md` is not read as having drifted by accident.
+- **Every count from the specification is enforced, not merely the presence of a field:** `pros` 3–5, `cons` 1–3, `dontMiss` 2–5, `tips` 2–5, `gallery` 3–8, `related` 3–5, `bestFor` 2–4. Array items are `.min(1)` as well — `cons: [""]` is a place with no downsides wearing a disguise, and the array-level check alone would let it through.
+- **`cons.min(1)` is the point of the whole file.** `docs/RULES.md` §1 says a place with no downsides does not get published. That rule now lives somewhere that cannot be tired at 1am.
+- `rating` refuses a second decimal: the value prints verbatim beside the stars, so 9.73 would display as 9.7 and sort as something else.
+- `googleMapsUrl` uses the **same** validator as `MapsButton`, extracted to `lib/content/maps.ts`. Two gates, one definition — a second copy drifts and one of them starts letting things through. An affiliate link cannot enter the system at all.
+- **On D6:** `docs/CONTENT.md` §2 lists fifteen and says "Build for 15; publish what exists", so the enum holds the thirteen **place** categories; the other two are Guides by the same section. Following the document rather than guessing at the client's answer — a narrower answer only ever removes entries.
+- Left `[~]` because **D15** is unanswered: other cities would need a `city` dimension, which is additive but belongs before content is seeded.
+- **Verify:** 84 unit tests, 82 E2E tests, all green.
 
 ### 2026-08-03 — Skip link, Header, PricingCard — and a flake I could not solve
 
