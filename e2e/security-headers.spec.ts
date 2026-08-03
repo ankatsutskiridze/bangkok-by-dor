@@ -51,7 +51,10 @@ for (const locale of ["he", "en"] as const) {
     });
 
     await page.goto(`/${locale}`);
-    await page.waitForLoadState("networkidle");
+    // Not `networkidle` — the header prefetches routes that do not exist yet,
+    // so the network never goes quiet. The footer being visible means the whole
+    // page has rendered, which is when a CSP violation would have fired.
+    await expect(page.locator("footer")).toBeVisible();
 
     expect(violations).toEqual([]);
   });

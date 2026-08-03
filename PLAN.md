@@ -103,8 +103,9 @@ A phase does not start until the previous phase's gate passes.
   **A real bug the E2E caught:** `/` was redirecting to `/en`, because next-intl detects `Accept-Language` by default — so "Hebrew is the default locale" was false for any English browser. Fixed with `localeDetection: false` (**D22**).
   Message files hold placeholder scaffold copy only. Real Hebrew copy is P2-18, English is P2-19.
 
-- [ ] **P0-09 — Root layout and document shell**
+- [x] **P0-09 — Root layout and document shell**
   Done when: root layout sets lang/dir, default metadata, a skip-to-content link, semantic `<main>`, and the global reset. No visual chrome yet.
+  Done 2026-08-03. `lang`, `dir`, metadata, `<main id="content">` and the reset were already in place from P0-08; the skip link was the remainder. It is first in the document so it is first in the tab order, and hidden with `sr-only` rather than `display: none` — both of the obvious alternatives remove it from the tab order, which is the one thing it must never leave. Verified in a browser: one Tab reaches it, it becomes visible on focus, and the target landmark exists.
 
 - [x] **P0-10 — Security headers**
   Done when: CSP, `X-Content-Type-Options`, `Referrer-Policy` and HSTS are configured in `next.config`, and the app still loads with no CSP violations in the console.
@@ -176,7 +177,10 @@ Every component: one per file, named export, file name matches the component, un
 
 ### Composites
 
-- [ ] **P1-11 — `Header`** — transparent over the hero, solid background after ~80px scroll. Mobile: wordmark, language toggle, one action (`Unlock` for visitors / `Menu` for buyers). Desktop: wordmark · Categories · About · FAQ · [Unlock Full Access / Account]. **No hamburger on desktop, no mega-menu.**
+- [~] **P1-11 — `Header`** — transparent over the hero, solid background after ~80px scroll. Mobile: wordmark, language toggle, one action (`Unlock` for visitors / `Menu` for buyers). Desktop: wordmark · Categories · About · FAQ · [Unlock Full Access / Account]. **No hamburger on desktop, no mega-menu.**
+  2026-08-03. Scroll state is exposed as `data-solid` rather than a class, so it is inspectable and assertable without matching on styling. The listener is passive and only writes state when the boolean flips, not on every frame. Verified in a browser: transparent at the top, solid past 80px, transparent again on the way back, three real desktop links, and the fixed bar does not cover the first heading.
+  Nav links carry an optional `prefetch` flag — on by default and wanted (P5-03), turned off only while a route does not exist yet, since Next.js otherwise prefetches it and collects 404s.
+  **Why not `[x]`:** the buyer state (`Menu` instead of `Unlock`, plus the menu itself) needs an authenticated session, which is Phase 4. Only the visitor state exists.
 - [~] **P1-12 — `Footer`** — categories, about, FAQ, contact, legal, language toggle. Nothing else.
   2026-08-03. "Nothing else" is treated as the specification, not a summary: no newsletter box, no social icons, no sitemap of every recommendation. A footer is where travel blogs accumulate, and `docs/BRAND.md` §6 names that as an anti-pattern. Links are passed in rather than hardcoded because every label is a translated string.
   Sits on the scaffold page for now, not in the locale layout — the routes it points at (P2-14…P2-17) do not exist yet, and the layout should not pretend otherwise.
@@ -208,7 +212,8 @@ Every component: one per file, named export, file name matches the component, un
   Height uses the `0fr → 1fr` grid technique, added as `collapsible`/`collapsed`/`expanded` utilities since `grid-rows-[0fr]` is an arbitrary value. It animates to the content's real height, so it cannot desynchronise the way a hardcoded `max-height` does. A collapsed panel is `inert`, which keeps it out of both the accessibility tree and the tab order — collapsed content that is still focusable is a keyboard trap.
   Several panels may be open at once: closing one to open another hides something the reader was mid-way through, and an FAQ is read by scanning. The toggle is a rotating `+` rather than a chevron, so it needs no icon set (clear of **D25**) and reads the same in both directions.
   Verified in a browser: the panel genuinely grows, opens from the keyboard, and collapsed panels are unreachable.
-- [ ] **P1-25 — `PricingCard`** — ₪79 · lifetime, always visible next to the CTA.
+- [~] **P1-25 — `PricingCard`** — ₪79 · lifetime, always visible next to the CTA.
+  2026-08-03. The price sits beside the button, never behind a click — a guide that hides its price until checkout earns the click before it has earned the trust. LTR-isolated so "₪79" does not reverse inside Hebrew, and tabular figures so it never shifts width. The CTA is passed in, so the card never owns the purchase behaviour.
 - [~] **P1-26 — `PaywallGate`** — the server-side gate wrapper. Renders the public shell; the gated body is only fetched after the access check passes. Ships as a stub returning "locked" until Phase 4.
   2026-08-03. **The body is a function, not a node** — that is the whole design. As a `ReactNode` the caller would have already fetched and rendered the paid content before the gate ran, and the gate could only decide whether to *display* what already existed, which is exactly the fake paywall `docs/RULES.md` §2 forbids. As a thunk it is never called without access.
   Written as an **async Server Component**, so the framework itself prevents it being moved to the browser — an async component cannot be a client component. That is enforcement, not a comment someone can ignore.

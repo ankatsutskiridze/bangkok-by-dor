@@ -20,7 +20,12 @@ const LOCALES = ["he", "en"] as const;
 for (const locale of LOCALES) {
   test(`visual record — ${locale}`, async ({ page }, testInfo) => {
     await page.goto(`/${locale}`);
-    await page.waitForLoadState("networkidle");
+    // Waits for something concrete rather than `networkidle`. Playwright warns
+    // against that signal, and it genuinely never settles here: the header
+    // links point at routes that do not exist yet, so Next.js prefetches them
+    // and gets 404s. Once P2-14…P2-17 build those pages it would settle again,
+    // but a test should not depend on that.
+    await expect(page.locator("footer")).toBeVisible();
 
     await testInfo.attach(`${locale}-${testInfo.project.name}`, {
       body: await page.screenshot({ fullPage: true }),

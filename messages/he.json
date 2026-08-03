@@ -36,6 +36,18 @@
     "privacy": "פרטיות",
     "refund": "החזרים"
   },
+  "A11y": {
+    "skipToContent": "דילוג לתוכן"
+  },
+  "Header": {
+    "navLabel": "ניווט ראשי",
+    "unlock": "פתיחת גישה מלאה"
+  },
+  "Pricing": {
+    "price": "₪79",
+    "term": "לכל החיים",
+    "note": "תשלום אחד. כל מקום שאוסיף בהמשך כלול."
+  },
   "Gallery": {
     "label": "תמונות",
     "lightboxLabel": "מציג התמונות",

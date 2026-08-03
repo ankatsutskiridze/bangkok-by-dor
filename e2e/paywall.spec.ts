@@ -46,7 +46,10 @@ test("gated content is absent from every response the page loads", async ({
   });
 
   await page.goto("/he");
-  await page.waitForLoadState("networkidle");
+  // Not `networkidle`: the header prefetches routes that do not exist yet, so
+  // the network never goes quiet. Waiting for the last element on the page
+  // means every response the page needed has already arrived.
+  await expect(page.locator("footer")).toBeVisible();
 
   expect(offenders).toEqual([]);
 });

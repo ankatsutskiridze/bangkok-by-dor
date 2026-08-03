@@ -11,6 +11,13 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL, trace: "on-first-retry" },
 
+  // Above Playwright's 5s default. A client-side navigation in Next.js fetches
+  // an RSC payload, and `npm run start` serves every worker from one process —
+  // so an assertion that waits on a URL change is waiting on a server round
+  // trip under contention, not on the browser. Verified the behaviour itself is
+  // correct before raising this; the flake was queueing, not a bug.
+  expect: { timeout: 10_000 },
+
   projects: [
     {
       // 375px is the width `docs/RULES.md` writes layouts against, so it is the

@@ -3,6 +3,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
+import { SkipLink } from "@/components/ui/SkipLink";
 import { getDirection, routing } from "@/lib/i18n/routing";
 import { CANVAS } from "@/lib/utils/canvas";
 import "@/styles/globals.css";
@@ -36,9 +37,13 @@ export default async function LocaleLayout({ children, params }: Props) {
   // Required for static rendering of locale-aware routes.
   setRequestLocale(locale);
 
+  const t = await getTranslations({ locale, namespace: "A11y" });
+
   return (
     <html lang={locale} dir={getDirection(locale)} data-canvas={CANVAS}>
       <body>
+        {/* First in the tab order, by being first in the document. */}
+        <SkipLink label={t("skipToContent")} />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

@@ -36,6 +36,18 @@
     "privacy": "Privacy",
     "refund": "Refunds"
   },
+  "A11y": {
+    "skipToContent": "Skip to content"
+  },
+  "Header": {
+    "navLabel": "Main",
+    "unlock": "Unlock Full Access"
+  },
+  "Pricing": {
+    "price": "₪79",
+    "term": "lifetime",
+    "note": "Pay once. Every place I add later is included."
+  },
   "Gallery": {
     "label": "Photos",
     "lightboxLabel": "Photo viewer",

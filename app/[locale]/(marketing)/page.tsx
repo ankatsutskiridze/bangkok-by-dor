@@ -3,7 +3,9 @@ import { Suspense } from "react";
 
 import { ScaffoldEmailForm } from "./ScaffoldEmailForm";
 import { Gallery } from "@/components/guide/Gallery";
+import { PricingCard } from "@/components/marketing/PricingCard";
 import { Button } from "@/components/ui/Button";
+import { Header } from "@/components/ui/Header";
 import { Container } from "@/components/ui/Container";
 import { Divider } from "@/components/ui/Divider";
 import { MapsButton } from "@/components/guide/MapsButton";
@@ -47,9 +49,27 @@ export default async function HomePage({ params }: Props) {
   const tFaq = await getTranslations("FAQ");
   const tGallery = await getTranslations("Gallery");
   const tEmail = await getTranslations("Email");
+  const tSite = await getTranslations("Site");
+  const tHeader = await getTranslations("Header");
+  const tPricing = await getTranslations("Pricing");
 
   return (
-    <main>
+    <>
+      <Header
+        wordmark={tSite("name")}
+        navLabel={tHeader("navLabel")}
+        languageLabel={tLang("label")}
+        localeNames={{ he: tLang("he"), en: tLang("en") }}
+        links={[
+          { href: "/categories", label: tFooter("categories"), prefetch: false },
+          { href: "/about", label: tFooter("about"), prefetch: false },
+          { href: "/faq", label: tFooter("faq"), prefetch: false },
+        ]}
+        action={<Button>{tHeader("unlock")}</Button>}
+      />
+
+      {/* `id` is the skip link's target; `pt` clears the fixed header. */}
+      <main id="content" className="pt-16 md:pt-20">
       <Section labelledBy="scaffold-heading">
         <Container width="measure">
           <h1 id="scaffold-heading" className="font-display text-h1">
@@ -152,6 +172,14 @@ export default async function HomePage({ params }: Props) {
             errorMessage={tEmail("error")}
           />
 
+          <PricingCard
+            className="mt-12"
+            price={tPricing("price")}
+            term={tPricing("term")}
+            note={tPricing("note")}
+            action={<Button>{tHeader("unlock")}</Button>}
+          />
+
           <FAQAccordion
             className="mt-12"
             items={[
@@ -179,17 +207,18 @@ export default async function HomePage({ params }: Props) {
         languageLabel={tLang("label")}
         localeNames={{ he: tLang("he"), en: tLang("en") }}
         links={[
-          { href: "/categories", label: tFooter("categories") },
-          { href: "/about", label: tFooter("about") },
-          { href: "/faq", label: tFooter("faq") },
-          { href: "/contact", label: tFooter("contact") },
+          { href: "/categories", label: tFooter("categories"), prefetch: false },
+          { href: "/about", label: tFooter("about"), prefetch: false },
+          { href: "/faq", label: tFooter("faq"), prefetch: false },
+          { href: "/contact", label: tFooter("contact"), prefetch: false },
         ]}
         legal={[
-          { href: "/terms", label: tFooter("terms") },
-          { href: "/privacy", label: tFooter("privacy") },
-          { href: "/refund", label: tFooter("refund") },
+          { href: "/terms", label: tFooter("terms"), prefetch: false },
+          { href: "/privacy", label: tFooter("privacy"), prefetch: false },
+          { href: "/refund", label: tFooter("refund"), prefetch: false },
         ]}
       />
-    </main>
+      </main>
+    </>
   );
 }

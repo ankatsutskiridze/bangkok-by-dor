@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils/cn";
 type FooterLink = {
   href: string;
   label: string;
+  /** See the note in `Header` — off only while a route does not exist yet. */
+  prefetch?: boolean;
 };
 
 type Props = {
@@ -74,10 +76,16 @@ export function Footer({
   );
 }
 
-function FooterAnchor({ href, label, muted = false }: FooterLink & { muted?: boolean }) {
+function FooterAnchor({
+  href,
+  label,
+  prefetch,
+  muted = false,
+}: FooterLink & { muted?: boolean }) {
   return (
     <Link
       href={href}
+      prefetch={prefetch}
       className={cn(
         "rounded-sm transition duration-fast ease-standard hover:opacity-92",
         "outline-focus focus-visible:outline-2 focus-visible:outline-offset-2",

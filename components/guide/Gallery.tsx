@@ -100,6 +100,18 @@ export function Gallery({
     if (openIndex === null && dialog.open) dialog.close();
   }, [openIndex]);
 
+  /**
+   * Arrow keys are bound to the document rather than to the dialog element.
+   *
+   * On the dialog, the handler only fires while focus is inside it — and there
+   * is a window after `showModal()` where focus has not landed yet, so an early
+   * key press is simply lost. That showed up as a test failing roughly one run
+   * in three; the behaviour was correct whenever focus had settled, which is
+   * exactly what makes it the kind of bug that reaches production.
+   *
+   * A modal dialog makes the rest of the page inert, so nothing else can be
+   * listening for these keys while it is open.
+   */
   const close = useCallback(() => {
     setIndex(null);
     // Return focus to the thumbnail that opened it, so a keyboard reader
@@ -114,6 +126,24 @@ export function Gallery({
     },
     [openIndex, images.length, setIndex],
   );
+
+  useEffect(() => {
+    if (openIndex === null) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      event.preventDefault();
+
+      // Mirrored by reading direction: "next" is the key pointing forward in
+      // the script, not the one pointing right.
+      const rtl = document.documentElement.dir === "rtl";
+      const forward = event.key === (rtl ? "ArrowLeft" : "ArrowRight");
+      step(forward ? 1 : -1);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [openIndex, step]);
 
   return (
     <>
@@ -151,12 +181,6 @@ export function Gallery({
         onCancel={(event) => {
           event.preventDefault();
           close();
-        }}
-        onKeyDown={(event) => {
-          // Arrow keys mirror in RTL: "next" is the key that points forward in
-          // the reading direction, not the one that points right.
-          if (event.key === "ArrowRight") step(isRtl() ? -1 : 1);
-          if (event.key === "ArrowLeft") step(isRtl() ? 1 : -1);
         }}
         onTouchStart={(event) => {
           touchStartX.current = event.touches[0]?.clientX ?? null;
