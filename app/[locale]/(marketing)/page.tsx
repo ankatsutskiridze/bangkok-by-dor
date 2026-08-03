@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Divider } from "@/components/ui/Divider";
+import { PaywallGate } from "@/components/guide/PaywallGate";
 import { LtrText } from "@/components/ui/LtrText";
 import { PriceLevel } from "@/components/ui/PriceLevel";
 import { Prose } from "@/components/ui/Prose";
@@ -57,6 +58,23 @@ export default async function HomePage({ params }: Props) {
             <Rating value={9.7} label={tRating("label", { value: "9.7" })} />
             <PriceLevel value="$$$" label={tPrice("label", { filled: 3 })} />
           </div>
+
+          <Divider className="my-12" />
+
+          {/*
+            Exercises the paywall against a real network response. The string
+            below must never appear in the HTML for a logged-out visitor —
+            `e2e/paywall.spec.ts` reads the raw body and asserts exactly that,
+            which is the test `docs/RULES.md` §2 prescribes. Removed with the
+            rest of this scaffold page in Phase 2.
+          */}
+          <PaywallGate
+            shell={<p className="text-small text-text-muted">Paywall probe</p>}
+            locked={<p className="text-small text-text-muted">Locked</p>}
+            body={async () => (
+              <p className="text-small">GATED-CONTENT-MUST-NOT-LEAK</p>
+            )}
+          />
 
           <Divider className="my-12" />
 

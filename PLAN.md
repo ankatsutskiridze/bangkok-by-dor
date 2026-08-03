@@ -184,14 +184,20 @@ Every component: one per file, named export, file name matches the component, un
 - [ ] **P1-16 — `LockedCard`** — hero image, name, category, rating, price level visible; then a clean lock panel with price and CTA. **Never a blurred fake body.** Styled as a sales surface, not an error.
 - [ ] **P1-17 — `HeroMedia`** — full-bleed on mobile.
 - [ ] **P1-18 — `Gallery`** — tap to open lightbox; swipe on mobile, arrow keys + Escape on desktop, focus trapped, gallery index in the URL.
-- [ ] **P1-19 — `ProsConsList`** — cons get the **same visual weight** as pros. Cons use the muted caution earth tone (#8A5A2B), never red.
+- [~] **P1-19 — `ProsConsList`** — cons get the **same visual weight** as pros. Cons use the muted caution earth tone (#8A5A2B), never red.
+  2026-08-03. Two equal columns, identical heading treatment on both — asserted by a test that compares the two headings' classes, so a later change that quietly shrinks the cons side fails CI rather than shipping.
+  **Throws on an empty `cons` array rather than degrading.** `docs/RULES.md` §1 says a place with no downsides does not get published; a component that silently rendered a pros-only list would turn a recommendation into an advertisement, which is the one thing this product cannot survive. The schema will also enforce `.min(1)` at P3-02 — belt and braces, deliberately.
 - [ ] **P1-20 — `TipsList`**
 - [ ] **P1-21 — `BestForTags`** — fixed list only: Couples · Solo travelers · Digital nomads · Families · Luxury travelers · Food lovers · First-time visitors.
 - [ ] **P1-22 — `MapsButton`** — opens in a new tab with `rel="noopener"`. The single most important action in the product.
 - [ ] **P1-23 — `RelatedGrid`** — 3–5 items.
 - [ ] **P1-24 — `FAQAccordion`** — smooth height, `duration-base`.
 - [ ] **P1-25 — `PricingCard`** — ₪79 · lifetime, always visible next to the CTA.
-- [ ] **P1-26 — `PaywallGate`** — the server-side gate wrapper. Renders the public shell; the gated body is only fetched after the access check passes. Ships as a stub returning "locked" until Phase 4.
+- [~] **P1-26 — `PaywallGate`** — the server-side gate wrapper. Renders the public shell; the gated body is only fetched after the access check passes. Ships as a stub returning "locked" until Phase 4.
+  2026-08-03. **The body is a function, not a node** — that is the whole design. As a `ReactNode` the caller would have already fetched and rendered the paid content before the gate ran, and the gate could only decide whether to *display* what already existed, which is exactly the fake paywall `docs/RULES.md` §2 forbids. As a thunk it is never called without access.
+  Written as an **async Server Component**, so the framework itself prevents it being moved to the browser — an async component cannot be a client component. That is enforcement, not a comment someone can ignore.
+  `lib/auth/access.ts` denies everything until P4-09, and that is the correct stub: one that granted access would make every gate look like it works while protecting nothing.
+  **Verified the way `docs/RULES.md` §2 prescribes** — `e2e/paywall.spec.ts` reads the raw response body, plus every text/JSON/JS response the page loads, and asserts the gated string is absent. **The tests were mutation-checked:** forcing `hasAccess` to return `true` made 4 of them fail, so they genuinely catch a leak rather than passing by construction.
 - [ ] **P1-27 — `EmailForm`** — real `<label>`, errors linked with `aria-describedby`, loading and error states, copy in Dor's voice.
 
 ### Cross-cutting

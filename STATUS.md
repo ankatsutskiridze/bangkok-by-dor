@@ -22,7 +22,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | Phase | Tasks | Done | State |
 |---|---|---|---|
 | 0 — Foundation | 18 | 6 | 🟡 gate passed, 12 blocked |
-| 1 — Design system | 30 | 0 | 🟡 8 primitives built, awaiting visual sign-off |
+| 1 — Design system | 30 | 0 | 🟡 10 components built, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
@@ -58,6 +58,16 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — The paywall gate, and the test that proves it
+
+- **P1-26 `PaywallGate`** built as a stub, and it is the most important thing in the repository so far. **The gated body is a function, not a node.** As a `ReactNode` the caller would already have fetched and rendered the paid content before the gate ran, leaving the gate able only to decide whether to *display* what already existed — precisely the fake paywall `docs/RULES.md` §2 forbids. As a thunk it is never called without access.
+- Written as an **async Server Component** so the framework prevents it being moved to the browser. An async component cannot be a client component; that is enforcement rather than a comment someone can ignore.
+- `lib/auth/access.ts` denies everything until P4-09. A stub that granted access would make every gate in the codebase appear to work while protecting nothing, and the day it was finally wired up would be the day every leak appeared at once.
+- **The paywall tests were mutation-checked.** Forcing `hasAccess` to return `true` made **4 tests fail**, then the stub was restored. A green test that can never go red is worth nothing, and this is the one test in the project that must not be decorative. `e2e/paywall.spec.ts` reads the raw response body and every text/JSON/JS response the page loads — not the rendered page, which would pass for a paywall built out of `display: none`.
+- **P1-19 `ProsConsList`** built. Two equal columns, with a test comparing the two headings' classes so a later change that quietly shrinks the cons side fails CI. It **throws** on an empty `cons` array rather than degrading into a pros-only list — `docs/RULES.md` §1 says a place with no downsides does not get published, and an advertisement is the one thing this product cannot survive.
+- **Verify:** 42 unit tests, 41 E2E tests, all green. `lib/auth/access.ts` confirmed back at `return false` with no backup file left behind.
+- **Next:** genuinely nothing that does not wait on an answer. D16, D24, D18, D25 and the client's accounts.
 
 ### 2026-08-03 — Rating, PriceLevel, Image — eight of ten primitives
 
