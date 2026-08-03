@@ -11,5 +11,35 @@
   },
   "PriceLevel": {
     "label": "Price level {filled} out of 4"
+  },
+  "Maps": {
+    "label": "Open in Google Maps",
+    "accessibleLabel": "Open in Google Maps, opens in a new tab"
+  },
+  "ProsCons": {
+    "pros": "Pros",
+    "cons": "Cons"
+  },
+  "Language": {
+    "label": "Language",
+    "he": "עברית",
+    "en": "English"
+  },
+  "Footer": {
+    "navLabel": "Footer",
+    "legalLabel": "Legal",
+    "categories": "Categories",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "refund": "Refunds"
+  },
+  "FAQ": {
+    "firstTimeQuestion": "Is this suitable for first-time visitors?",
+    "firstTimeAnswer": "Placeholder answer. Real copy is written in P2-10.",
+    "updatesQuestion": "Are new places added over time?",
+    "updatesAnswer": "Placeholder answer. Real copy is written in P2-10."
   }
 }

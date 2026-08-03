@@ -177,8 +177,12 @@ Every component: one per file, named export, file name matches the component, un
 ### Composites
 
 - [ ] **P1-11 — `Header`** — transparent over the hero, solid background after ~80px scroll. Mobile: wordmark, language toggle, one action (`Unlock` for visitors / `Menu` for buyers). Desktop: wordmark · Categories · About · FAQ · [Unlock Full Access / Account]. **No hamburger on desktop, no mega-menu.**
-- [ ] **P1-12 — `Footer`** — categories, about, FAQ, contact, legal, language toggle. Nothing else.
-- [ ] **P1-13 — `LanguageToggle`** — he/en, preserves the current route and its params.
+- [~] **P1-12 — `Footer`** — categories, about, FAQ, contact, legal, language toggle. Nothing else.
+  2026-08-03. "Nothing else" is treated as the specification, not a summary: no newsletter box, no social icons, no sitemap of every recommendation. A footer is where travel blogs accumulate, and `docs/BRAND.md` §6 names that as an anti-pattern. Links are passed in rather than hardcoded because every label is a translated string.
+  Sits on the scaffold page for now, not in the locale layout — the routes it points at (P2-14…P2-17) do not exist yet, and the layout should not pretend otherwise.
+- [~] **P1-13 — `LanguageToggle`** — he/en, preserves the current route and its params.
+  2026-08-03. Each language is a real `<Link>`, so it works before hydration; `usePathname` returns the resolved path without its locale segment, so `/he/r/vertigo` becomes `/en/r/vertigo` rather than the home page. Language names stay in their own language — a Hebrew reader looking for English finds "English", not a translation of it. The active language carries `aria-current`, because colour alone is not a state.
+  **⚠ Search params are not carried over.** That needs `useSearchParams`, which forces every page containing this behind a Suspense boundary — a real cost today for a benefit that only arrives with the URL filters in **P3-14**. Revisit there.
 - [ ] **P1-14 — `CategoryCard`** — 4:5 image, emoji allowed here (and only here + category page headers), place count.
 - [ ] **P1-15 — `RecommendationCard`** — desktop-only image scale 1.0 → 1.03 on hover. Never rely on hover to reveal information.
 - [ ] **P1-16 — `LockedCard`** — hero image, name, category, rating, price level visible; then a clean lock panel with price and CTA. **Never a blurred fake body.** Styled as a sales surface, not an error.
@@ -194,7 +198,11 @@ Every component: one per file, named export, file name matches the component, un
   **Validates the URL rather than trusting it.** `docs/RULES.md` §1 says the only outbound link on a recommendation is Google Maps, so a non-Maps host throws. Hosts match **exactly, never by suffix** — a suffix test accepts `google.com.attacker.example`, which is the classic way past this check. Country domains (`google.co.il`) are deliberately absent; each one widens the check and gets added when a real URL needs it.
   `rel="noopener noreferrer"` — the spec asks for `noopener`; `noreferrer` is added because the referrer of a paywalled URL is not ours to hand to a third party.
 - [ ] **P1-23 — `RelatedGrid`** — 3–5 items.
-- [ ] **P1-24 — `FAQAccordion`** — smooth height, `duration-base`.
+- [~] **P1-24 — `FAQAccordion`** — smooth height, `duration-base`.
+  2026-08-03. A real `<button>` with `aria-expanded` and `aria-controls`, not `<details>`/`<summary>` — native details is better semantics but cannot animate its height reliably across browsers, and the smooth open is in the specification.
+  Height uses the `0fr → 1fr` grid technique, added as `collapsible`/`collapsed`/`expanded` utilities since `grid-rows-[0fr]` is an arbitrary value. It animates to the content's real height, so it cannot desynchronise the way a hardcoded `max-height` does. A collapsed panel is `inert`, which keeps it out of both the accessibility tree and the tab order — collapsed content that is still focusable is a keyboard trap.
+  Several panels may be open at once: closing one to open another hides something the reader was mid-way through, and an FAQ is read by scanning. The toggle is a rotating `+` rather than a chevron, so it needs no icon set (clear of **D25**) and reads the same in both directions.
+  Verified in a browser: the panel genuinely grows, opens from the keyboard, and collapsed panels are unreachable.
 - [ ] **P1-25 — `PricingCard`** — ₪79 · lifetime, always visible next to the CTA.
 - [~] **P1-26 — `PaywallGate`** — the server-side gate wrapper. Renders the public shell; the gated body is only fetched after the access check passes. Ships as a stub returning "locked" until Phase 4.
   2026-08-03. **The body is a function, not a node** — that is the whole design. As a `ReactNode` the caller would have already fetched and rendered the paid content before the gate ran, and the gate could only decide whether to *display* what already existed, which is exactly the fake paywall `docs/RULES.md` §2 forbids. As a thunk it is never called without access.

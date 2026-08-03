@@ -11,5 +11,35 @@
   },
   "PriceLevel": {
     "label": "רמת מחיר {filled} מתוך 4"
+  },
+  "Maps": {
+    "label": "פתיחה ב־Google Maps",
+    "accessibleLabel": "פתיחה ב־Google Maps, נפתח בלשונית חדשה"
+  },
+  "ProsCons": {
+    "pros": "יתרונות",
+    "cons": "חסרונות"
+  },
+  "Language": {
+    "label": "שפה",
+    "he": "עברית",
+    "en": "English"
+  },
+  "Footer": {
+    "navLabel": "ניווט תחתון",
+    "legalLabel": "מידע משפטי",
+    "categories": "קטגוריות",
+    "about": "אודות",
+    "faq": "שאלות נפוצות",
+    "contact": "צור קשר",
+    "terms": "תנאי שימוש",
+    "privacy": "פרטיות",
+    "refund": "החזרים"
+  },
+  "FAQ": {
+    "firstTimeQuestion": "האם המדריך מתאים למבקרים בפעם הראשונה?",
+    "firstTimeAnswer": "תשובה זמנית. הטקסט האמיתי נכתב ב־P2-10.",
+    "updatesQuestion": "האם נוספים מקומות חדשים עם הזמן?",
+    "updatesAnswer": "תשובה זמנית. הטקסט האמיתי נכתב ב־P2-10."
   }
 }

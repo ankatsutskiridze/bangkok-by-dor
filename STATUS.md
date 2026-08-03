@@ -22,7 +22,7 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | Phase | Tasks | Done | State |
 |---|---|---|---|
 | 0 — Foundation | 18 | 6 | 🟡 gate passed, 12 blocked |
-| 1 — Design system | 30 | 0 | 🟡 11 components + RTL harness, awaiting visual sign-off |
+| 1 — Design system | 30 | 0 | 🟡 14 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | ⬜ not started |
 | 3 — Content layer | 15 | 0 | ⬜ not started |
 | 4 — Paywall & access | 16 | 0 | ⬜ not started |
@@ -58,6 +58,16 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — Footer, LanguageToggle, FAQAccordion
+
+- **P1-12 `Footer`, P1-13 `LanguageToggle`, P1-24 `FAQAccordion`** built, all `[~]`. Fourteen components now stand.
+- `docs/UX.md` §3 ends the footer spec with "**Nothing else**", and that is treated as the specification rather than a summary — no newsletter box, no social icons, no sitemap of every recommendation. A footer is where travel blogs accumulate, which `docs/BRAND.md` §6 names as an anti-pattern.
+- `LanguageToggle` uses real `<Link>`s, so it works before hydration, and `usePathname` keeps the reader on the same recommendation instead of sending them home. **Search params are deliberately not preserved** — that needs `useSearchParams`, which forces a Suspense boundary on every page containing the toggle. A real cost today for a benefit that only arrives with the URL filters in P3-14.
+- `FAQAccordion` uses a real `<button>` with `aria-expanded`, not `<details>` — native details cannot animate its height reliably and the smooth open is specified. Height uses the `0fr → 1fr` grid technique, added as `collapsible`/`collapsed`/`expanded` utilities because `grid-rows-[0fr]` is an arbitrary value. Collapsed panels are `inert`: content that is still focusable inside a zero-height box is a keyboard trap. The toggle is a rotating `+`, not a chevron, so it needs no icon set and reads the same in both directions.
+- **Two of my own tests were wrong today, and both were caught rather than shipped.** The RTL mirror test measured a block-level heading, whose box never moves. The accordion test used a state-based locator (`{ expanded: false }`), which silently re-pointed at a different button the moment a panel opened. Both are now positional.
+- **Verify:** 54 unit tests, 59 E2E tests, all green. Hebrew rendering checked in a browser: footer links right-aligned, language toggle opposite, FAQ toggle on the correct side, pros/cons in the right order.
+- **Next:** the remaining components — `Header`, `CategoryCard`, `LockedCard`, `Gallery`, `PricingCard`, `EmailForm` — are visually heavy. `LockedCard` in particular is a sales surface, and building it without knowing the canvas means building it twice.
 
 ### 2026-08-03 — MapsButton and the RTL verification harness
 

@@ -6,6 +6,8 @@ import { Divider } from "@/components/ui/Divider";
 import { MapsButton } from "@/components/guide/MapsButton";
 import { PaywallGate } from "@/components/guide/PaywallGate";
 import { ProsConsList } from "@/components/guide/ProsConsList";
+import { FAQAccordion } from "@/components/ui/FAQAccordion";
+import { Footer } from "@/components/ui/Footer";
 import { LtrText } from "@/components/ui/LtrText";
 import { PriceLevel } from "@/components/ui/PriceLevel";
 import { Prose } from "@/components/ui/Prose";
@@ -30,6 +32,11 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("Scaffold");
   const tRating = await getTranslations("Rating");
   const tPrice = await getTranslations("PriceLevel");
+  const tMaps = await getTranslations("Maps");
+  const tProsCons = await getTranslations("ProsCons");
+  const tLang = await getTranslations("Language");
+  const tFooter = await getTranslations("Footer");
+  const tFaq = await getTranslations("FAQ");
 
   return (
     <main>
@@ -91,20 +98,57 @@ export default async function HomePage({ params }: Props) {
           <div className="mt-8">
             <MapsButton
               href="https://www.google.com/maps/place/Vertigo+Rooftop"
-              label="Open in Google Maps"
-              accessibleLabel="Open in Google Maps, opens in a new tab"
+              label={tMaps("label")}
+              accessibleLabel={tMaps("accessibleLabel")}
             />
           </div>
 
           <ProsConsList
             className="mt-12"
-            prosHeading="Pros"
-            consHeading="Cons"
+            prosHeading={tProsCons("pros")}
+            consHeading={tProsCons("cons")}
             pros={["The view is genuinely the best in the city", "Staff speak English"]}
             cons={["It is not cheap", "Always full on weekends"]}
           />
+
+          <FAQAccordion
+            className="mt-12"
+            items={[
+              {
+                question: tFaq("firstTimeQuestion"),
+                answer: tFaq("firstTimeAnswer"),
+              },
+              {
+                question: tFaq("updatesQuestion"),
+                answer: tFaq("updatesAnswer"),
+              },
+            ]}
+          />
         </Container>
       </Section>
+
+      {/*
+        The footer belongs in the locale layout once the routes it points at
+        exist (P2-14…P2-17). It sits here for now so it can be exercised in a
+        browser without the layout pretending those pages are built.
+      */}
+      <Footer
+        navLabel={tFooter("navLabel")}
+        legalLabel={tFooter("legalLabel")}
+        languageLabel={tLang("label")}
+        localeNames={{ he: tLang("he"), en: tLang("en") }}
+        links={[
+          { href: "/categories", label: tFooter("categories") },
+          { href: "/about", label: tFooter("about") },
+          { href: "/faq", label: tFooter("faq") },
+          { href: "/contact", label: tFooter("contact") },
+        ]}
+        legal={[
+          { href: "/terms", label: tFooter("terms") },
+          { href: "/privacy", label: tFooter("privacy") },
+          { href: "/refund", label: tFooter("refund") },
+        ]}
+      />
     </main>
   );
 }

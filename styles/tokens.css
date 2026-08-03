@@ -302,3 +302,26 @@
 @utility scale-pressed {
   scale: 0.985;
 }
+
+/**
+ * Smooth accordion height — `docs/DESIGN_SYSTEM.md` §5 lists it as an allowed
+ * pattern.
+ *
+ * The `0fr → 1fr` grid technique animates to the content's own height without
+ * measuring anything in JavaScript, so it cannot desynchronise from the content
+ * the way a hardcoded `max-height` does.
+ *
+ * Utilities rather than `grid-rows-[0fr]`, which is an arbitrary value.
+ */
+@utility collapsible {
+  display: grid;
+  transition-property: grid-template-rows;
+}
+
+@utility collapsed {
+  grid-template-rows: 0fr;
+}
+
+@utility expanded {
+  grid-template-rows: 1fr;
+}
