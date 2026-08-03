@@ -33,7 +33,6 @@ Every question that must be answered before the work that depends on it can star
 
 | ID | Question | Blocks | Status |
 |---|---|---|---|
-| **D11** | Domain and all third-party accounts registered in the client's name, developer as collaborator | P0-13 | 🔴 Open |
 | **D12** | Pre-purchase email capture — wanted? Legal basis under Israeli anti-spam law (חוק הספאם) requires explicit opt-in | P2-21 | 🔴 Open |
 | **D13** | Analytics tooling, and who has access | P5-07 | 🔴 Open |
 | **D14** | Support channel for buyers who cannot log in | P2-16, P6-04 | 🔴 Open |
@@ -56,6 +55,8 @@ Every question that must be answered before the work that depends on it can star
 | ID | Answer | Decided by | Date |
 |---|---|---|---|
 | **D19** | Repository visibility: **public**. The recommendation on record was private-until-launch; the client chose public and it stands. | Client | 2026-08-02 |
+| **D11** | **Yes — the client's name.** Vercel, Neon and every future third-party account are created by the client, with the developer added as a collaborator/team member. Follows `docs/TECHNICAL.md` §9. *Policy settled; execution still pending* — the accounts do not exist yet, so P0-12 / P0-16 / P0-13 remain blocked on the client actually creating them. | Client | 2026-08-03 |
+| **D20** | **Hosting architecture: Vercel for the whole application, Neon for Postgres.** No separate backend server. Next.js App Router is fullstack — Server Components, Route Handlers and `/lib` *are* the backend and run as serverless functions on Vercel. Data lives on Neon, an independent managed service, so the database is already decoupled from the host. | Client, after review | 2026-08-03 |
 
 ### Consequences of D19 — carry these forward
 
@@ -64,6 +65,12 @@ Public visibility changes two later decisions. Do not treat these as reopened qu
 - **D8 (content source) is effectively narrowed to a CMS.** With a public repo, MDX-in-repo would publish the entire paid guide for free — the paywall would be decorative. If the client still wants MDX, the content files must live outside the public repo (private submodule or a separate private repo), and that has to be decided before P3-01.
 - **Nothing sensitive may ever be committed.** Already required by `docs/RULES.md` §5, but the margin for error is now zero: no `.env`, no payment keys, no database URL, no magic-link signing secret, no real buyer emails in fixtures or test data. A leaked secret in a public repo is compromised the moment it is pushed, and rewriting history does not un-leak it.
 - **Secret scanning and push protection should be enabled** on the GitHub repo (Settings → Code security). Tracked as P0-01c.
+
+### Consequences of D20 — carry these forward
+
+- **Use Neon's pooled connection string, never the direct one.** Serverless functions open many short-lived connections; the direct endpoint exhausts them. Applies from P0-16 onward and again in P4-02.
+- **Watch image bandwidth.** If the photo catalogue grows, Vercel's image traffic becomes the dominant cost. Cloudinary is already the alternative on record in `docs/TECHNICAL.md` §1 — revisit at P5-02, not before.
+- **The escape hatch, if it is ever needed:** a heavy background job would move to a small separate service, not the whole backend. Nothing in the current scope requires it.
 
 ---
 

@@ -10,12 +10,12 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 | | |
 |---|---|
 | **Phase** | 0 — Foundation *(in progress)* |
-| **Current task** | none in progress |
-| **Next action** | **P0-02** — scaffold the Next.js app (App Router, TypeScript strict, Tailwind). Check current versions with Context7 before installing. |
-| **Code written** | none — the repository contains documentation and planning only |
+| **Current task** | P0-14 partial — Context7 configured, awaiting approval |
+| **Next action** | **Restart the session so Context7 loads**, then **P0-02** — scaffold the Next.js app (App Router, TypeScript strict, Tailwind), checking versions with Context7 rather than from memory. |
+| **Code written** | none — the repository contains documentation, planning and `.mcp.json` only |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no |
-| **Blocked on** | nothing blocks Phase 0 except **P0-05 / D16** (dark or light canvas) and **P0-13 / D11** (account ownership). Everything else in Phase 0 can proceed today. |
+| **Blocked on** | **P0-12 and P0-16 are blocked on the client** creating the Vercel and Neon accounts (D11 answered: they go in the client's name). **P0-05 / D16** still blocks the visual tasks. P0-02, P0-03, P0-04 can proceed as soon as Context7 is approved. |
 
 ## Progress by phase
 
@@ -31,12 +31,12 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 ## Decisions outstanding
 
-18 open, 1 answered. Full detail in `DECISIONS.md`.
+17 open, 3 answered. Full detail in `DECISIONS.md`.
 
 - **Needed soon** (blocks work in the next two phases): D16 canvas · D18 typefaces · D6 category list · D17 free-preview place · D10 English at launch
 - **Needed before Phase 3**: D8 content source *(narrowed by D19 — the repo is public, so paid content cannot live in it as MDX)* · D7 launch volume · D9 photo rights
 - **Needed before Phase 4**: D1 payment provider · D2 entity & VAT · D3 refund policy · D4 access method · D5 currency
-- **Needed before launch**: D11 accounts · D12 email capture · D13 analytics · D14 support channel · D15 v1+ roadmap
+- **Needed before launch**: D12 email capture · D13 analytics · D14 support channel · D15 v1+ roadmap
 
 ## The critical path
 
@@ -58,6 +58,16 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-03 — Hosting settled (D20), D11 answered, Context7 configured
+
+- **Hosting discussed and decided (D20):** the whole app on Vercel, Postgres on Neon. The question raised was whether the backend should sit on its own server; the answer is that this project has no separate backend — Next.js App Router is fullstack, and the data layer is already decoupled by living on Neon. Consequences recorded in `DECISIONS.md`: use Neon's **pooled** connection string, and watch image bandwidth at P5-02.
+- **D11 answered:** all accounts are created by the **client**, developer added as collaborator. Policy settled, execution pending.
+- **P0-14 partial:** Context7 MCP added at project scope in `.mcp.json` — HTTP, no API key committed (the repo is public). It shows `⏸ Pending approval`; **the session must be restarted and the server approved before its tools work.**
+- **P0-16 added to the plan** — provision the Neon project, infrastructure only. The client asked for the database now; the schema and ORM stay in P4-02 so the Phase 4 gate is not quietly bypassed.
+- No application code written. `create-next-app` has not been run.
+- **Blocked:** P0-12 (Vercel) and P0-16 (Neon) wait on the client creating both accounts. A request has been drafted for the client.
+- **Next:** restart the session, approve Context7, then P0-02.
 
 ### 2026-08-02 — D19 answered, session closed
 

@@ -105,11 +105,17 @@ A phase does not start until the previous phase's gate passes.
 - [ ] **P0-13 — Accounts and ownership** ⛔ D11
   Done when: domain, Vercel, payment provider, email provider and CMS accounts are all registered **in the client's name**, with the developer added as a collaborator.
 
-- [ ] **P0-14 — MCP tooling**
+- [~] **P0-14 — MCP tooling**
   Done when: Context7 MCP is configured and used for library docs; Figma MCP configured if the client has Figma; any approved UI/UX MCP configured. Recorded in `DECISIONS.md`.
+  2026-08-03 — Context7 added at **project scope** in `.mcp.json` (HTTP, `https://mcp.context7.com/mcp`, **no API key committed** — the repo is public per D19). Approval + a session restart are required before its tools are usable. Still outstanding: first real use (P0-02), Figma MCP (waits on whether the client has Figma), UI/UX MCP.
 
 - [ ] **P0-15 — Dependency hygiene**
   Done when: dependencies pinned, Dependabot (or equivalent) enabled, and a note in the repo that major framework upgrades never ride along with unrelated tasks.
+
+- [ ] **P0-16 — Provision the Neon Postgres project** *(infrastructure only — no schema)*
+  Done when: a Neon project exists in the **client's** account (D11) with the developer invited, region `eu-central-1` (nearest to the Israeli audience), a `main` branch for production and a `dev` branch for local work; the **pooled** connection string is set as `DATABASE_URL` in the local `.env` and in all three Vercel environments; and a connection is verified from the app.
+  **No tables, no migrations, no ORM here** — `purchase` / `user` / `session` and the ORM choice stay in **P4-02**. This task only puts the database in place so env wiring is real rather than a placeholder.
+  Raised 2026-08-03: the client asked for the database early, ahead of its Phase 4 slot. Splitting it this way keeps the Phase 4 gate honest.
 
 ---
 
