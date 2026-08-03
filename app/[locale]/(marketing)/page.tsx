@@ -33,7 +33,15 @@ export default async function HomePage({ params }: Props) {
           </h1>
 
           <Prose className="mt-6 text-text-muted">
-            <p>{t("note")}</p>
+            {/*
+              `t.rich` rather than `t`: the Latin fragment inside the Hebrew
+              sentence has to be isolated, or the bidi algorithm drags the
+              surrounding punctuation into it — verified in the browser, where
+              "P2-18." rendered as "P2--18" with the full stop orphaned onto
+              the next line. This is the pattern every price, rating and place
+              name in the guide will use.
+            */}
+            <p>{t.rich("note", { ltr: (chunks) => <LtrText>{chunks}</LtrText> })}</p>
             <p className="mt-4 text-small">
               <LtrText className="tabular-nums">
                 Bangkok by Dor · ₪79 · 9.7/10

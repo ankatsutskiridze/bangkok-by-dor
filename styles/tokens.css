@@ -252,9 +252,18 @@
   --container-measure: 680px; /* reading measure for body copy */
 
   /* Typefaces are D18 / P0-07. These stacks are placeholders so the scale can
-     be built and reviewed; they are not a choice. Validate in Hebrew first. */
-  --font-display: ui-serif, Georgia, serif;
-  --font-body: ui-sans-serif, system-ui, sans-serif;
+     be built and reviewed; they are not a choice. Validate in Hebrew first.
+
+     ⚠ "Segoe UI" and Arial are named explicitly because the generic stacks
+     alone rendered ₪ (U+20AA) as a missing-glyph box on Windows. The shekel
+     sign is the product's price — it can never be a box.
+
+     **Hard requirement for D18:** whichever typeface is chosen must cover the
+     Hebrew block (U+0590–U+05FF), the shekel sign U+20AA, and the Thai baht
+     sign ฿ U+0E3F, which appears in prices throughout the guide. Verify before
+     licensing, not after. */
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif;
 }
 
 /* Spacing and breakpoints are deliberately not redefined. `docs/DESIGN_SYSTEM.md`

@@ -17,7 +17,10 @@ test("every button meets the 44px minimum touch target", async ({
 
   // `docs/DESIGN_SYSTEM.md` §6 and WCAG 2.2 §2.5.8. The `link` variant is
   // exempt — it sits inline in a sentence.
-  const buttons = page.locator("button:not(.underline)");
+  //
+  // Scoped to `main` so the assertion is about the product. Next.js injects
+  // its own dev-tools button outside it, which is not ours to size.
+  const buttons = page.locator("main button:not(.underline)");
   const count = await buttons.count();
   expect(count).toBeGreaterThan(0);
 
