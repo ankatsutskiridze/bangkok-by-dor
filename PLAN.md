@@ -82,8 +82,9 @@ A phase does not start until the previous phase's gate passes.
   Done 2026-08-03. Zod 4 schema in `lib/env.ts`, imported from `next.config.ts` so a missing variable fails the **build**, not a request — verified by deleting `.env` and watching the build stop with `✖ Invalid input … → at NEXT_PUBLIC_SITE_URL`. Only `NODE_ENV` and `NEXT_PUBLIC_SITE_URL` are declared: a schema listing variables the app does not yet use would be a schema that lies. `.env.example` names the rest under "Not yet in use" with the task that will add each.
   **For P0-16 / P4-01:** when the first server-only secret arrives, split this into a server schema and a `NEXT_PUBLIC_` client schema — `process.env` is stripped to the public prefix inside client bundles, so one shared schema breaks there.
 
-- [ ] **P0-05 — Choose the canvas: dark or light** ⛔ D16
+- [x] **P0-05 — Choose the canvas: dark or light**
   Done when: one canvas is chosen and recorded in `DECISIONS.md`. `docs/DESIGN_SYSTEM.md` §9 says pick one and execute it perfectly — do not build a theme switcher in v1.
+  Done 2026-08-04 — **light**, decided by the client: *"My photos are mostly bright."* Recorded as D16. One line in `lib/utils/canvas.ts`; all 92 E2E tests passed unchanged, which is what defining both token sets bought. No theme switcher, per §9.
 
 - [~] **P0-06 — Design tokens in code**
   Done when: every token from `docs/DESIGN_SYSTEM.md` exists as a CSS variable in `styles/tokens.css` and is consumed by the Tailwind config — colors (`docs/BRAND.md` §5), spacing scale, type scale with `clamp()`, radii, three elevation levels, motion durations and easings, breakpoints. **Both** the dark and light token sets are defined even though only one ships, so the second theme is a swap and not a rewrite.

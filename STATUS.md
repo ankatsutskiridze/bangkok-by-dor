@@ -11,17 +11,17 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 |---|---|
 | **Phase** | 0 gate passed · 1 in progress · slices of 2, 3 and 4 built ahead, by agreement |
 | **Current task** | none in progress |
-| **Next action** | **Nothing is left that does not wait on an answer.** Phase 0–4 were re-read task by task on 2026-08-03 and every remaining item is gated on a decision, on content, or on an account. Two things are *yours* rather than mine: **P0-01c** (secret scanning, push protection, branch protection — CI has run, so the check names exist) and approving Context7 on the next restart, which closes out P0-02. |
+| **Next action** | **D16 is answered — the canvas is light.** That unblocks the remaining Phase 1 components: **P1-16 `LockedCard`** first, since it is the sales surface. Two things stay *yours* rather than mine: **P0-01c** (secret scanning, push protection, branch protection) and approving Context7, which closes out P0-02. |
 | **Code written** | foundation, 19 components, the content schemas and fetching seam, the related-recommendations logic, robots/sitemap, and the access + webhook rules. No product UI — every page is still the scaffold. |
 | **Git** | `ankatsutskiridze/bangkok-by-dor` · `main` tracking `origin/main` · **public** (D19, decided) · no branch protection or secret scanning yet (P0-01c) |
 | **Deployed** | no — waiting on the client's Vercel account |
-| **Blocked on** | **The client, on every front.** Visual work: **D16** canvas, **D24** palette contrast, **D18** typefaces, **D25** icon set. Content: **D8** source, **D9** photos, **D6**, **D7**, **D17**. Payments: **D1**–**D5**. Infrastructure: the Vercel and Neon accounts (P0-12, P0-16). D16 unblocks the most by far. |
+| **Blocked on** | **D16 is answered — light** (2026-08-04). Visual work still needs **D18** typefaces and **D25** icon set; **D24** narrowed to a single colour. Content: **D8** source, **D9** photos, **D6**, **D7**, **D17**. Payments: **D1**–**D5**. Infrastructure: the Vercel and Neon accounts (P0-12, P0-16). |
 
 ## Progress by phase
 
 | Phase | Tasks | Done | State |
 |---|---|---|---|
-| 0 — Foundation | 18 | 7 | 🟡 gate passed, 11 blocked |
+| 0 — Foundation | 18 | 8 | 🟡 gate passed, 10 blocked |
 | 1 — Design system | 30 | 0 | 🟡 19 components + RTL harness, awaiting visual sign-off |
 | 2 — Public shell | 21 | 0 | 🟡 P2-20 robots/sitemap built ahead of phase |
 | 3 — Content layer | 15 | 1 | 🟡 P3-02/03/08 built ahead of phase |
@@ -31,9 +31,9 @@ Task definitions and checkbox state live in `PLAN.md`. Open questions live in `D
 
 ## Decisions outstanding
 
-19 open, 3 answered. Full detail in `DECISIONS.md`.
+18 open, 4 answered. Full detail in `DECISIONS.md`.
 
-- **Needed soon** (blocks work in the next two phases): D16 canvas · **D24 palette contrast** · D18 typefaces · **D25 icon set** · D6 category list · D17 free-preview place · D10 English at launch
+- **Needed soon** (blocks work in the next two phases): D18 typefaces · **D24 one colour** · **D25 icon set** · D6 category list · D17 free-preview place · D10 English at launch
 - **Needed before Phase 3**: D8 content source *(narrowed by D19 — the repo is public, so paid content cannot live in it as MDX)* · D7 launch volume · D9 photo rights
 - **Needed before Phase 4**: D1 payment provider · D2 entity & VAT · D3 refund policy · D4 access method · D5 currency
 - **Needed before launch**: D12 email capture · D13 analytics · D14 support channel · D15 v1+ roadmap
@@ -58,6 +58,16 @@ P0-01 → P0-02 → P0-03 → P0-06 tokens → P0-08 i18n/RTL
 ## Session log
 
 Newest entry at the top. One entry per session, even if no code was written.
+
+### 2026-08-04 — D16 answered: the canvas is light
+
+- **The client answered D16 in one line: "My photos are mostly bright. Go light."** That reason is better than either document's. A dark canvas earns its keep by making low-light photography glow; against bright daytime images it fights them. He knows his own catalogue, and it **overrides the `docs/BRAND.md` §Mood evidence** found yesterday — that passage describes a mood, and the person who took the photographs outranks it.
+- **The change was one line** in `lib/utils/canvas.ts`, and **all 92 E2E tests passed unchanged**, including the one asserting the canvas colours resolve correctly. That is exactly what defining both token sets on day one bought — the requirement doing the job it was written for.
+- **D24 shrank from four colours to one.** `teal` (9.12:1), `positive` (5.83:1) and `caution` (5.58:1) all pass comfortably on warm white; they only failed on the dark canvas, which is no longer being built. What remains is a single substitution — `stone-500` #8C877F → #6F6A62 — and a far smaller thing to ask the client to approve.
+- The three dark-canvas shades stay defined in `tokens.css` but are now unused. Left in place rather than deleted: "the second theme is a swap, not a rewrite" is a documented requirement, and removing them would quietly undo it.
+- Screenshots taken on the light canvas for the client, who asked to see the product before setting up Vercel and Neon.
+- **Verify:** 112 unit tests, 92 E2E tests, all green on the light canvas.
+- **Next:** **P1-16 `LockedCard`** — the sales surface, and the component that most needed the canvas settled.
 
 ### 2026-08-03 — The money rules, written before the database
 
